@@ -39,20 +39,20 @@ public class StageEvaluation {
     private LocalDateTime evaluationDate;
 
     @ManyToOne
-    @JoinColumn(name = "id_evaluating_faculty")
+    @JoinColumn(name = "id_committeeMember")
     private CommitteeMember committeeMember;
 
     @Column(name = "observations")
     private String observations;
 
     // Constructors
-    public StageEvaluation(Application application, ProcessStage processStage, BigDecimal totalStageScore, Boolean isEliminatedInStage, LocalDateTime evaluationDate, CommitteeMember evaluatingFaculty, String observations) {
+    public StageEvaluation(Application application, ProcessStage processStage, BigDecimal totalStageScore, Boolean isEliminatedInStage, LocalDateTime evaluationDate, CommitteeMember committeeMember, String observations) {
         this.application = application;
         this.processStage = processStage;
         this.totalStageScore = totalStageScore;
         this.isEliminatedInStage = isEliminatedInStage;
         this.evaluationDate = evaluationDate;
-        this.committeeMember = evaluatingFaculty;
+        this.committeeMember = committeeMember;
         this.observations = observations;
     }
 }
