@@ -22,7 +22,7 @@ public class StageEvaluation {
 
     @ManyToOne
     @JoinColumn(name = "id_application", nullable = false)
-    private ApprovedApplication application;
+    private Application application;
 
     @ManyToOne
     @JoinColumn(name = "id_stage", nullable = false)
@@ -38,14 +38,14 @@ public class StageEvaluation {
     private LocalDateTime evaluationDate;
 
     @ManyToOne
-    @JoinColumn(name = "id_evaluating_faculty") // Nullable if evaluation is automated
+    @JoinColumn(name = "id_evaluating_faculty")
     private CommitteeMember committeeMember;
 
     @Column(name = "observations")
     private String observations;
 
     // Constructors
-    public StageEvaluation(ApprovedApplication application, ProcessStage processStage, BigDecimal totalStageScore, Boolean isEliminatedInStage, LocalDateTime evaluationDate, CommitteeMember evaluatingFaculty, String observations) {
+    public StageEvaluation(Application application, ProcessStage processStage, BigDecimal totalStageScore, Boolean isEliminatedInStage, LocalDateTime evaluationDate, CommitteeMember evaluatingFaculty, String observations) {
         this.application = application;
         this.processStage = processStage;
         this.totalStageScore = totalStageScore;
