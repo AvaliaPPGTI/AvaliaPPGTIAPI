@@ -12,6 +12,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "evaluation_criteria")
 public class EvaluationCriterion {

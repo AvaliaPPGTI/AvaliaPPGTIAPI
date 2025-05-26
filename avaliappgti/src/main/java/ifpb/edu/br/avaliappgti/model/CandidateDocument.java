@@ -11,6 +11,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "candidate_documents")
 public class CandidateDocument {

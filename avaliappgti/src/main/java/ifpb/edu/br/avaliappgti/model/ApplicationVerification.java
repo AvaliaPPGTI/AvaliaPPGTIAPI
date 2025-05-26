@@ -10,6 +10,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "applications_verification")
 public class ApplicationVerification {

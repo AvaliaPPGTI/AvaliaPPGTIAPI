@@ -13,6 +13,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "selection_processes")
 public class SelectionProcess {

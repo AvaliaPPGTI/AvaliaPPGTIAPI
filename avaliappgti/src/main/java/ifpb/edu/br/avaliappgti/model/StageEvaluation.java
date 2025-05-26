@@ -7,11 +7,12 @@ import java.time.LocalDateTime; // Use LocalDateTime for combined date and time
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-// TODO: FIX
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "stage_evaluations")
 public class StageEvaluation {
