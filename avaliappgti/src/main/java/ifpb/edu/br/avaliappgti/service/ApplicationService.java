@@ -42,7 +42,7 @@ public class ApplicationService {
         return applications.stream()
                 .map(app -> {
                     String candidateName = (app.getCandidate() != null) ? app.getCandidate().getName() : "N/A Candidate";
-                    Integer candidateId = (app.getCandidate() != null) ? app.getCandidate().getId() : "N/A Candidate ID";
+                    Integer candidateId = (app.getCandidate() != null) ? app.getCandidate().getId() : 0;
                     String researchTopicName = (app.getResearchTopic() != null) ? app.getResearchTopic().getName() : "N/A Topic";
                     String researchLineName = (app.getResearchTopic() != null && app.getResearchTopic().getResearchLine() != null)
                             ? app.getResearchTopic().getResearchLine().getName() : "N/A Line";
