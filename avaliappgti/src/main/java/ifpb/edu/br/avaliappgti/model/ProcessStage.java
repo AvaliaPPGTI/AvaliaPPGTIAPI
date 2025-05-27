@@ -20,7 +20,7 @@ public class ProcessStage {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "id_process", nullable = false)
+    @JoinColumn(name = "id_selection_process", nullable = false)
     private SelectionProcess selectionProcess;
 
     @Column(name = "stage_name", nullable = false)

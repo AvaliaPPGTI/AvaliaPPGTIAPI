@@ -22,7 +22,7 @@ public class EvaluationCriterion {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "id_stage", nullable = false)
+    @JoinColumn(name = "id_process_stage", nullable = false)
     private ProcessStage processStage;
 
     @Column(name = "criterion_description", nullable = false)

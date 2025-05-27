@@ -8,6 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.EntityGraph;
+
+import ifpb.edu.br.avaliappgti.model.Application;
+import ifpb.edu.br.avaliappgti.model.ProcessStage;
+import ifpb.edu.br.avaliappgti.model.CommitteeMember;
 
 import ifpb.edu.br.avaliappgti.model.StageEvaluation;
 
@@ -27,4 +32,9 @@ public interface StageEvaluationRepository extends JpaRepository<StageEvaluation
 
     // Find all evaluations where the candidate was eliminated in that stage
     List<StageEvaluation> findByIsEliminatedInStageTrue();
+
+    @Override
+    @EntityGraph(attributePaths = {"processStage"}) // "processStage" is the field name in StageEvaluation model
+    Optional<StageEvaluation> findById(Integer id);
+
 }

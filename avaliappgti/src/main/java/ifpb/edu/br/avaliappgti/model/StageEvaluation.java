@@ -26,7 +26,7 @@ public class StageEvaluation {
     private Application application;
 
     @ManyToOne
-    @JoinColumn(name = "id_stage", nullable = false)
+    @JoinColumn(name = "id_process_stage", nullable = false)
     private ProcessStage processStage;
 
     @Column(name = "total_stage_score", precision = 5, scale = 2)
