@@ -4,8 +4,8 @@ package ifpb.edu.br.avaliappgti.model;
 import jakarta.persistence.*;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
@@ -22,7 +22,7 @@ public class ResearchTopic {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "line_id", nullable = false)
-    private ResearchLine researchLine; // Reference to ResearchLine
+    private ResearchLine researchLine;
 
     @Column(name = "name", nullable = false)
     private String name;

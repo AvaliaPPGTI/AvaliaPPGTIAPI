@@ -2,7 +2,6 @@ package ifpb.edu.br.avaliappgti.model;
 
 
 import jakarta.persistence.*;
-import java.time.LocalDate; // Assuming date of birth, etc., should be LocalDate
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

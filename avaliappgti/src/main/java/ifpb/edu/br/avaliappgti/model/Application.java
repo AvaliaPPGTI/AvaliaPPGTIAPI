@@ -65,9 +65,6 @@ public class Application {
 
 
     // Constructors
-    public Application() {
-        this.applicationDate = LocalDateTime.now();
-    }
     public Application(Candidate candidate, SelectionProcess selectionProcess, ResearchLine researchLine, ResearchTopic researchTopic, String projectTitle, String projectPath) {
         this.candidate = candidate;
         this.selectionProcess = selectionProcess;
