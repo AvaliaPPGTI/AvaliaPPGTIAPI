@@ -19,7 +19,7 @@ public class EvaluationCriterion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idCriterion;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "id_stage", nullable = false)

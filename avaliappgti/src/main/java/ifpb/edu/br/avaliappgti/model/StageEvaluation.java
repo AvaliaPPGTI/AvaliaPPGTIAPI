@@ -19,7 +19,7 @@ public class StageEvaluation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idStageEvaluation;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "id_application", nullable = false)

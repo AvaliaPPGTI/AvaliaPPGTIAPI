@@ -17,7 +17,7 @@ public class ProcessStage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idStage;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "id_process", nullable = false)
