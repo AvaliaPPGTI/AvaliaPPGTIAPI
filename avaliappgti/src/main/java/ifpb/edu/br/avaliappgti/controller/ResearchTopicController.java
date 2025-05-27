@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api/research-topics") // Base path for this controller's endpoints
+@RequestMapping("/api/research-topics")
 public class ResearchTopicController {
 
     private final ResearchTopicService researchTopicService;

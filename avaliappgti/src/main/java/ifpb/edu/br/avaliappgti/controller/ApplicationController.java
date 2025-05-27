@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api/applications") // Base path for this controller's endpoints
+@RequestMapping("/api/applications")
 public class ApplicationController {
 
     private final ApplicationService applicationService;
