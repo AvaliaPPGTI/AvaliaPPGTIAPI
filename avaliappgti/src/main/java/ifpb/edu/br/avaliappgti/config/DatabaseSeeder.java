@@ -24,7 +24,10 @@ public class DatabaseSeeder {
                                    QuotaRepository quotaRepository,
                                    CandidateRepository candidateRepository, 
                                    CandidateDocumentRepository candidateDocumentRepository,
-                                   ApplicationRepository applicationRepository) {
+                                   ApplicationRepository applicationRepository,
+                                   ApplicationVerificationRepository applicationVerificationRepository,
+                                   StageEvaluationRepository stageEvaluationRepository,
+                                   CriterionScoreRepository criterionScoreRepository) {
         return args -> {
 
             // Create Committee Member
@@ -306,6 +309,7 @@ public class DatabaseSeeder {
             verification.setQuotaDeclarationIfVerified(false);
             verification.setRegistrationClearanceVerified(true);
             verification.setFinalStatus(1); // e.g., 1 = Homologado
+            applicationVerificationRepository.save(verification);
 
             StageEvaluation stageEvaluation1 = new StageEvaluation();
             stageEvaluation1.setApplication(application); 
@@ -315,6 +319,7 @@ public class DatabaseSeeder {
             stageEvaluation1.setEvaluationDate(LocalDateTime.now());
             stageEvaluation1.setCommitteeMember(newMember);
             stageEvaluation1.setObservations("Good performance in interview.");
+            stageEvaluationRepository.save(stageEvaluation1);
 
             StageEvaluation stageEvaluation2 = new StageEvaluation();
             stageEvaluation2.setApplication(application);
@@ -324,11 +329,13 @@ public class DatabaseSeeder {
             stageEvaluation2.setEvaluationDate(LocalDateTime.now());
             stageEvaluation2.setCommitteeMember(newMember); 
             stageEvaluation2.setObservations("Good discuss in pre project.");
+            stageEvaluationRepository.save(stageEvaluation2);
 
             CriterionScore score = new CriterionScore();
             score.setStageEvaluation(stageEvaluation1);
             score.setEvaluationCriterion(criterion1);
             score.setScoreObtained(BigDecimal.valueOf(8.75));
+            criterionScoreRepository.save(score);
 
         };
     }
@@ -348,5 +355,5 @@ public class DatabaseSeeder {
     criterion.setMaximumScore(maxScore);
     criterion.setProcessStage(stage);
     repository.save(criterion);
-}
+    }
 }
