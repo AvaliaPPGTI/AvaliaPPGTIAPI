@@ -10,10 +10,16 @@ import org.springframework.stereotype.Repository;
 
 import ifpb.edu.br.avaliappgti.model.Application;
 import ifpb.edu.br.avaliappgti.model.ApplicationVerification;
+import ifpb.edu.br.avaliappgti.model.Candidate;
+import ifpb.edu.br.avaliappgti.model.SelectionProcess;
 
 
 @Repository
 public interface ApplicationVerificationRepository extends JpaRepository<ApplicationVerification, Integer> {
     Optional<ApplicationVerification> findByApplication(Application application);
     List<ApplicationVerification> findByFinalStatus(Integer finalStatus); // e.g., 0 for Recusado, 1 for Homologado
+    
+
+    @Query("SELECT DISTINCT a.candidate FROM ApplicationVerification av JOIN av.application a WHERE av.finalStatus = :status AND a.selectionProcess = :selectionProcess")
+    List<Candidate> findCandidatesByVerificationStatusAndSelectionProcess(@Param("status") Integer status, @Param("selectionProcess") SelectionProcess selectionProcess);
 }

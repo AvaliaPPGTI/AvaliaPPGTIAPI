@@ -1,7 +1,8 @@
 package ifpb.edu.br.avaliappgti.controller;
 
 import ifpb.edu.br.avaliappgti.dto.CandidateApplicationDetailDTO;
-import ifpb.edu.br.avaliappgti.model.Application; // You might still want to return full Applications for other endpoints
+import ifpb.edu.br.avaliappgti.model.Application;
+import ifpb.edu.br.avaliappgti.model.Candidate;
 import ifpb.edu.br.avaliappgti.service.ApplicationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,37 @@ public class ApplicationController {
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/homologated-candidates")
+    public ResponseEntity<List<Candidate>> getHomologatedCandidates() {
+        try {
+            List<Candidate> candidates = applicationService.getHomologatedCandidates();
+            if (candidates.isEmpty()) {
+                return ResponseEntity.noContent().build(); // 204 No Content
+            }
+            return ResponseEntity.ok(candidates);
+        } catch (Exception e) {
+            System.err.println("Error fetching homologated candidates: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // returns all candidates homologated for a specific selection process
+    @GetMapping("/by-process/{processId}/homologated-candidates")
+    public ResponseEntity<List<Candidate>> getHomologatedCandidatesByProcess(@PathVariable Integer processId) {
+        try {
+            List<Candidate> candidates = applicationService.getHomologatedCandidatesBySelectionProcessId(processId);
+            if (candidates.isEmpty()) {
+                return ResponseEntity.noContent().build(); // 204 No Content
+            }
+            return ResponseEntity.ok(candidates);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            System.err.println("Error fetching homologated candidates for process " + processId + ": " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

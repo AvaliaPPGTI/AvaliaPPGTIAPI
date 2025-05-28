@@ -29,6 +29,8 @@ public class CriterionScore {
     @JoinColumn(name = "id_criterion", nullable = false)
     private EvaluationCriterion evaluationCriterion;
 
+    // @DecimalMin("0.00")
+    // @DecimalMax("100.00")
     @Column(name = "score_obtained", precision = 5, scale = 2)
     private BigDecimal scoreObtained;
 
