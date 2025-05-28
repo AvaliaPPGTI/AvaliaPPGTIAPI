@@ -11,6 +11,8 @@ import ifpb.edu.br.avaliappgti.model.SelectionProcess;
 
 @Repository
 public interface ProcessStageRepository extends JpaRepository<ProcessStage, Integer> {
+    Optional<ProcessStage> findById(Integer id); // JpaRepository provides this by default
+
     // Find all stages for a specific selection process
     List<ProcessStage> findBySelectionProcess(SelectionProcess selectionProcess);
 
