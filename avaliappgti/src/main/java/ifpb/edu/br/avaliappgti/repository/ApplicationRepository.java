@@ -30,4 +30,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Intege
             "AND av.finalStatus = 1")
     List<Candidate> findHomologatedCandidatesByResearchTopicId(@Param("researchTopicId") Integer researchTopicId);
 
+
+    // Find an Application by its Candidate and ResearchTopic
+    // The 'candidate' and 'researchTopic' here refer to the field names in the Application entity.
+    Optional<Application> findByCandidateAndResearchTopic(Candidate candidate, ResearchTopic researchTopic);
 }

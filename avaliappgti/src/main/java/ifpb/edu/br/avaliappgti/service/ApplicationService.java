@@ -10,13 +10,11 @@ import ifpb.edu.br.avaliappgti.repository.ApplicationRepository;
 import ifpb.edu.br.avaliappgti.repository.SelectionProcessRepository;
 import ifpb.edu.br.avaliappgti.repository.ApplicationVerificationRepository;
 import ifpb.edu.br.avaliappgti.repository.ResearchTopicRepository;
+import ifpb.edu.br.avaliappgti.repository.CandidateRepository;
 
 import ifpb.edu.br.avaliappgti.dto.CandidateApplicationDetailDTO;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -30,17 +28,19 @@ public class ApplicationService {
     private final SelectionProcessRepository selectionProcessRepository;
     private final ApplicationVerificationRepository applicationVerificationRepository;
     private final ResearchTopicRepository researchTopicRepository;
+    private final CandidateRepository candidateRepository;
 
 
     public ApplicationService(ApplicationRepository applicationRepository,
                               SelectionProcessRepository selectionProcessRepository, 
                               ApplicationVerificationRepository applicationVerificationRepository,
-                              ResearchTopicRepository researchTopicRepository) {
+                              ResearchTopicRepository researchTopicRepository,
+                              CandidateRepository candidateRepository) {
         this.applicationRepository = applicationRepository;
         this.selectionProcessRepository = selectionProcessRepository;
         this.applicationVerificationRepository = applicationVerificationRepository;
         this.researchTopicRepository = researchTopicRepository;
-        
+        this.candidateRepository = candidateRepository;
     }
 
     @Transactional(readOnly = true)
@@ -137,5 +137,23 @@ public class ApplicationService {
 
         // Call the custom repository method
         return applicationRepository.findHomologatedCandidatesByResearchTopicId(researchTopicId);
+    }
+
+    // NEW METHOD: Get a specific application by Candidate ID and Research Topic ID
+    @Transactional(readOnly = true)
+    public Optional<Application> getApplicationByCandidateAndResearchTopic(
+            Integer candidateId,
+            Integer researchTopicId) {
+
+        // fetch the Candidate entity
+        Candidate candidate = candidateRepository.findById(candidateId)
+                .orElseThrow(() -> new NoSuchElementException("Candidate not found with ID: " + candidateId));
+
+        // fetch the ResearchTopic entity
+        ResearchTopic researchTopic = researchTopicRepository.findById(researchTopicId)
+                .orElseThrow(() -> new NoSuchElementException("Research Topic not found with ID: " + researchTopicId));
+
+        // ue the derived query to find the application
+        return applicationRepository.findByCandidateAndResearchTopic(candidate, researchTopic);
     }
 }

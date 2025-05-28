@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/applications")
@@ -89,6 +90,29 @@ public class ApplicationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } catch (Exception e) {
             System.err.println("Error fetching homologated candidates by research topic " + researchTopicId + ": " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // returns a specific application based on candidate ID and research topic ID
+    // Example path: /api/applications/by-candidate/1/research-topic/101
+    @GetMapping("/by-candidate/{candidateId}/research-topic/{researchTopicId}")
+    public ResponseEntity<Application> getApplicationByCandidateAndResearchTopic(
+            @PathVariable Integer candidateId,
+            @PathVariable Integer researchTopicId) {
+        try {
+            Optional<Application> applicationOptional = applicationService.getApplicationByCandidateAndResearchTopic(
+                    candidateId, researchTopicId);
+
+            return applicationOptional
+                    .map(ResponseEntity::ok) // If found, return 200 OK with the Application
+                    .orElse(ResponseEntity.notFound().build()); // If not found, return 404 Not Found
+        } catch (NoSuchElementException e) {
+            // If Candidate or ResearchTopic itself was not found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            System.err.println("Error fetching application for candidate " + candidateId +
+                    " and research topic " + researchTopicId + ": " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
