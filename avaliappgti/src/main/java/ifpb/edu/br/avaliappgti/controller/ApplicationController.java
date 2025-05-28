@@ -74,4 +74,23 @@ public class ApplicationController {
         }
     }
 
+    // Returns candidates whose applications are homologated for a specific research topic
+    @GetMapping("/homologated-candidates/by-research-topic/{researchTopicId}")
+    public ResponseEntity<List<Candidate>> getHomologatedCandidatesByResearchTopic(
+            @PathVariable Integer researchTopicId) {
+        try {
+            List<Candidate> candidates = applicationService.getHomologatedCandidatesByResearchTopic(researchTopicId);
+            if (candidates.isEmpty()) {
+                return ResponseEntity.noContent().build(); // 204 No Content
+            }
+            return ResponseEntity.ok(candidates);
+        } catch (NoSuchElementException e) {
+            // If the research topic itself was not found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            System.err.println("Error fetching homologated candidates by research topic " + researchTopicId + ": " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

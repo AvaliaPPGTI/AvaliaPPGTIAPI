@@ -1,15 +1,19 @@
 package ifpb.edu.br.avaliappgti.service;
 
 import ifpb.edu.br.avaliappgti.model.Application;
+import ifpb.edu.br.avaliappgti.model.Candidate;
 import ifpb.edu.br.avaliappgti.model.SelectionProcess;
+import ifpb.edu.br.avaliappgti.model.ApplicationVerification;
+import ifpb.edu.br.avaliappgti.model.ResearchTopic;
+
 import ifpb.edu.br.avaliappgti.repository.ApplicationRepository;
 import ifpb.edu.br.avaliappgti.repository.SelectionProcessRepository;
+import ifpb.edu.br.avaliappgti.repository.ApplicationVerificationRepository;
+import ifpb.edu.br.avaliappgti.repository.ResearchTopicRepository;
+
 import ifpb.edu.br.avaliappgti.dto.CandidateApplicationDetailDTO;
 
-import ifpb.edu.br.avaliappgti.model.Candidate; 
-import ifpb.edu.br.avaliappgti.model.ApplicationVerification;
-import ifpb.edu.br.avaliappgti.repository.ApplicationVerificationRepository; 
-
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.HashSet;
@@ -18,8 +22,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 
 @Service
 public class ApplicationService {
@@ -27,14 +29,17 @@ public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final SelectionProcessRepository selectionProcessRepository;
     private final ApplicationVerificationRepository applicationVerificationRepository;
+    private final ResearchTopicRepository researchTopicRepository;
 
 
     public ApplicationService(ApplicationRepository applicationRepository,
                               SelectionProcessRepository selectionProcessRepository, 
-                              ApplicationVerificationRepository applicationVerificationRepository) {
+                              ApplicationVerificationRepository applicationVerificationRepository,
+                              ResearchTopicRepository researchTopicRepository) {
         this.applicationRepository = applicationRepository;
         this.selectionProcessRepository = selectionProcessRepository;
         this.applicationVerificationRepository = applicationVerificationRepository;
+        this.researchTopicRepository = researchTopicRepository;
         
     }
 
@@ -119,5 +124,18 @@ public class ApplicationService {
                     );
                 })
                 .collect(Collectors.toList());
+    }
+
+    // Get candidates whose applications are homologated for a given research topic
+    @Transactional(readOnly = true)
+    public List<Candidate> getHomologatedCandidatesByResearchTopic(Integer researchTopicId) {
+        // Optional: Verify if research topic exists, though the query will return empty if it doesn't
+        boolean researchTopicExists = researchTopicRepository.existsById(researchTopicId);
+        if (!researchTopicExists) {
+            throw new NoSuchElementException("Research Topic not found with ID: " + researchTopicId);
+        }
+
+        // Call the custom repository method
+        return applicationRepository.findHomologatedCandidatesByResearchTopicId(researchTopicId);
     }
 }

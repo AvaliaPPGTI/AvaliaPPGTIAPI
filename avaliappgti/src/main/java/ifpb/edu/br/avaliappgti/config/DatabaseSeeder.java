@@ -332,7 +332,7 @@ public class DatabaseSeeder {
             stageEvaluationRepository.save(stageEvaluation2);
 
             CriterionScore score = new CriterionScore();
-            score.setStageEvaluation(stageEvaluation1);
+            score.setStageEvaluation(stageEvaluation2);
             score.setEvaluationCriterion(criterion1);
             score.setScoreObtained(BigDecimal.valueOf(8.75));
             criterionScoreRepository.save(score);

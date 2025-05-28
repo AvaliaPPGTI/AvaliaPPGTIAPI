@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ifpb.edu.br.avaliappgti.model.Application;
 import ifpb.edu.br.avaliappgti.model.Candidate;
 import ifpb.edu.br.avaliappgti.model.SelectionProcess;
@@ -19,4 +21,13 @@ public interface ApplicationRepository extends JpaRepository<Application, Intege
     List<Application> findByApplicationStatus(String status);
     List<Application> findBySelectionProcessAndIsApproved(SelectionProcess process, Boolean isApproved);
     List<Application> findBySelectionProcessOrderByFinalScoreDesc(SelectionProcess selectionProcess);
+
+    //finds candidates whose applications are homologated for a specific research topic
+    @Query("SELECT DISTINCT a.candidate FROM Application a " +
+            "JOIN a.researchTopic rt " +
+            "JOIN ApplicationVerification av ON av.application = a " + // Ensure ApplicationVerification is joined correctly
+            "WHERE rt.id = :researchTopicId " +
+            "AND av.finalStatus = 1")
+    List<Candidate> findHomologatedCandidatesByResearchTopicId(@Param("researchTopicId") Integer researchTopicId);
+
 }
