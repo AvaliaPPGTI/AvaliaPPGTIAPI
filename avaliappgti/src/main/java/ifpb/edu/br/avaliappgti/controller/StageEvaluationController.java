@@ -2,8 +2,9 @@ package ifpb.edu.br.avaliappgti.controller;
 
 import ifpb.edu.br.avaliappgti.model.StageEvaluation;
 import ifpb.edu.br.avaliappgti.service.StageEvaluationService;
-import ifpb.edu.br.avaliappgti.dto.StageEvaluationCreateDTO; // Import the new DTO
-import jakarta.validation.Valid; // For validating the request body
+import ifpb.edu.br.avaliappgti.dto.StageEvaluationCreateDTO; 
+import ifpb.edu.br.avaliappgti.dto.StageEvaluationResponseDTO; 
+import jakarta.validation.Valid; 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api/stage-evaluations") // Base path for this controller's endpoints
+@RequestMapping("/api/stage-evaluations") 
 public class StageEvaluationController {
 
     private final StageEvaluationService stageEvaluationService;
@@ -20,29 +21,26 @@ public class StageEvaluationController {
         this.stageEvaluationService = stageEvaluationService;
     }
 
-    // NEW ENDPOINT: Create a new StageEvaluation
+    // create a new StageEvaluation
     @PostMapping
-    public ResponseEntity<StageEvaluation> createStageEvaluation(@Valid @RequestBody StageEvaluationCreateDTO createDTO) {
+    public ResponseEntity<StageEvaluationResponseDTO> createStageEvaluation(@Valid @RequestBody StageEvaluationCreateDTO createDTO) { // Changed return type
         try {
-            StageEvaluation newStageEvaluation = stageEvaluationService.createStageEvaluation(createDTO);
+            StageEvaluationResponseDTO newStageEvaluation = stageEvaluationService.createStageEvaluation(createDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(newStageEvaluation);
         } catch (NoSuchElementException e) {
-            // If Application, ProcessStage, or FacultyMember not found
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 with no body
         } catch (Exception e) {
             System.err.println("Error creating StageEvaluation: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    // Optional: Get a single StageEvaluation by ID
     @GetMapping("/{id}")
-    public ResponseEntity<StageEvaluation> getStageEvaluationById(@PathVariable Integer id) {
+    public ResponseEntity<StageEvaluationResponseDTO> getStageEvaluationById(@PathVariable Integer id) { // Changed return type
         return stageEvaluationService.getStageEvaluationById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // You can add other CRUD operations for StageEvaluation here
-    // e.g., PUT for updates, DELETE for deletion, GET for listing
+    // add other CRUD operations for StageEvaluation here PUT for updates, DELETE for deletion, GET for listing
 }

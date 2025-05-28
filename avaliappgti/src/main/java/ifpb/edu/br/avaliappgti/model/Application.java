@@ -2,17 +2,18 @@ package ifpb.edu.br.avaliappgti.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.math.BigDecimal;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 @Entity
 @Table(name = "applications")
 public class Application {
@@ -23,6 +24,7 @@ public class Application {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "candidate_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private Candidate candidate;
 
     @ManyToOne(fetch = FetchType.LAZY)

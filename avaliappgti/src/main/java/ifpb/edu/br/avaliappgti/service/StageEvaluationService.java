@@ -7,17 +7,18 @@ import org.springframework.stereotype.Service;
 import ifpb.edu.br.avaliappgti.model.StageEvaluation;
 import ifpb.edu.br.avaliappgti.model.Application;
 import ifpb.edu.br.avaliappgti.model.ProcessStage;
-import ifpb.edu.br.avaliappgti.model.CommitteeMember; // Import FacultyMember
+import ifpb.edu.br.avaliappgti.model.CommitteeMember;
 import ifpb.edu.br.avaliappgti.repository.StageEvaluationRepository;
-import ifpb.edu.br.avaliappgti.repository.ApplicationRepository; // Import ApplicationRepository
-import ifpb.edu.br.avaliappgti.repository.ProcessStageRepository; // Import ProcessStageRepository
-import ifpb.edu.br.avaliappgti.repository.CommitteeMemberRepository; // Import FacultyMemberRepository
-import ifpb.edu.br.avaliappgti.dto.StageEvaluationCreateDTO; // Import the new DTO
-import org.springframework.stereotype.Service;
+import ifpb.edu.br.avaliappgti.repository.ApplicationRepository;
+import ifpb.edu.br.avaliappgti.repository.ProcessStageRepository;
+import ifpb.edu.br.avaliappgti.repository.CommitteeMemberRepository;
+import ifpb.edu.br.avaliappgti.dto.StageEvaluationCreateDTO;
+import ifpb.edu.br.avaliappgti.dto.StageEvaluationResponseDTO;
+
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate; // For default evaluationDate
-import java.util.List;
+import java.time.LocalDateTime; 
+
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -25,9 +26,9 @@ import java.util.Optional;
 public class StageEvaluationService {
 
     private final StageEvaluationRepository stageEvaluationRepository;
-    private final ApplicationRepository applicationRepository; // Inject
-    private final ProcessStageRepository processStageRepository; // Inject
-    private final CommitteeMemberRepository committeeMemberRepository; // Inject
+    private final ApplicationRepository applicationRepository;
+    private final ProcessStageRepository processStageRepository;
+    private final CommitteeMemberRepository committeeMemberRepository;
 
     public StageEvaluationService(StageEvaluationRepository stageEvaluationRepository,
                                   ApplicationRepository applicationRepository,
@@ -39,12 +40,11 @@ public class StageEvaluationService {
         this.committeeMemberRepository = committeeMemberRepository;
     }
 
-    // Existing methods (e.g., getScoresByStageEvaluation)
 
-    // NEW METHOD: Create and save a new StageEvaluation
+    // create and save a new StageEvaluation
     @Transactional
-    public StageEvaluation createStageEvaluation(StageEvaluationCreateDTO createDTO) {
-        // 1. Fetch dependent entities
+    public StageEvaluationResponseDTO createStageEvaluation(StageEvaluationCreateDTO createDTO) {
+        // fetch dependent entities
         Application application = applicationRepository.findById(createDTO.getApplicationId())
                 .orElseThrow(() -> new NoSuchElementException("Application not found with ID: " + createDTO.getApplicationId()));
 
@@ -57,11 +57,14 @@ public class StageEvaluationService {
                     .orElseThrow(() -> new NoSuchElementException("Evaluating Faculty not found with ID: " + createDTO.getCommitteeMemberId()));
         }
 
-        // 2. Create the StageEvaluation entity
+        // create the StageEvaluation entity
         StageEvaluation stageEvaluation = new StageEvaluation();
         stageEvaluation.setApplication(application);
         stageEvaluation.setProcessStage(processStage);
         stageEvaluation.setCommitteeMember(committeeMember);
+        stageEvaluation.setEvaluationDate(createDTO.getEvaluationDate() != null ? createDTO.getEvaluationDate() : LocalDateTime.now());
+        // stageEvaluation.setIsEliminatedInStage(createDTO.getIsEliminatedInStage() != null ? createDTO.getIsEliminatedInStage() : false);
+
 
         // Initialize finalScore and isEliminatedInStage to default values
         stageEvaluation.setTotalStageScore(null); // Or BigDecimal.ZERO, depending on your default
@@ -70,14 +73,15 @@ public class StageEvaluationService {
         // Optional: Check for existing evaluation for the same application and stage
         // If you only allow one evaluation per app/stage, add a unique constraint in DB
         // and/or a check here: stageEvaluationRepository.findByApplicationAndProcessStage(...)
+        StageEvaluation savedStageEvaluation = stageEvaluationRepository.save(stageEvaluation);
 
-        // 3. Save the StageEvaluation
-        return stageEvaluationRepository.save(stageEvaluation);
+        // save the StageEvaluation
+        return new StageEvaluationResponseDTO(savedStageEvaluation);
     }
 
-    // You might also want methods to get a single stage evaluation or update it.
     @Transactional(readOnly = true)
-    public Optional<StageEvaluation> getStageEvaluationById(Integer id) {
-        return stageEvaluationRepository.findById(id);
+    public Optional<StageEvaluationResponseDTO> getStageEvaluationById(Integer id) {
+        return stageEvaluationRepository.findById(id)
+                .map(StageEvaluationResponseDTO::new);
     }
 }

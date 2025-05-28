@@ -4,7 +4,7 @@ package ifpb.edu.br.avaliappgti.dto;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class StageEvaluationCreateDTO {
 
@@ -17,13 +17,22 @@ public class StageEvaluationCreateDTO {
     // Optional: Evaluating Faculty ID
     private Integer committeeMemberId;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime evaluationDate;
+
+    // @NotNull(message = "Eliminated in Stage field required")
+    // private Boolean isEliminatedInStage = false;
+
+
     // Constructors
     public StageEvaluationCreateDTO() {}
 
-    public StageEvaluationCreateDTO(Integer applicationId, Integer processStageId, Integer committeeMemberId) {
+    public StageEvaluationCreateDTO(Integer applicationId, Integer processStageId, Integer committeeMemberId, LocalDateTime evaluationDate) { //, boolean isEliminatedInStage
         this.applicationId = applicationId;
         this.processStageId = processStageId;
         this.committeeMemberId = committeeMemberId;
+        this.evaluationDate = evaluationDate;
+        // this.isEliminatedInStage = false;
     }
 
     // Getters and Setters
@@ -50,4 +59,22 @@ public class StageEvaluationCreateDTO {
     public void setCommitteeMemberId(Integer committeeMemberId) {
         this.committeeMemberId = committeeMemberId;
     }
+
+    public LocalDateTime getEvaluationDate() {
+        return evaluationDate;
+    }
+
+    public void setEvaluationDate(LocalDateTime evaluationDate) {
+        this.evaluationDate = evaluationDate;
+    }
+
+    // public Boolean getIsEliminatedInStage() {
+    //     return isEliminatedInStage;
+    // }
+
+    // public void setIsEliminatedInStage(Boolean isEliminatedInStage) {
+    //     this.isEliminatedInStage = isEliminatedInStage;
+    // }
+
+
 }

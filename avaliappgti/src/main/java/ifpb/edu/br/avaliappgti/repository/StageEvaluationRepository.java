@@ -31,7 +31,11 @@ public interface StageEvaluationRepository extends JpaRepository<StageEvaluation
     List<StageEvaluation> findByIsEliminatedInStageTrue();
 
     @Override
-    @EntityGraph(attributePaths = {"processStage"}) // "processStage" is the field name in StageEvaluation model
+    @EntityGraph(attributePaths = {"application.candidate", "processStage", "committeeMember"})
+    StageEvaluation save(StageEvaluation entity);
+
+    @Override
+    @EntityGraph(attributePaths = {"application.candidate", "processStage", "committeeMember"})
     Optional<StageEvaluation> findById(Integer id);
 
 }

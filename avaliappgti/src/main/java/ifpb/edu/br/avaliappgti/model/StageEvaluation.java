@@ -4,15 +4,16 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime; // Use LocalDateTime for combined date and time
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+
 
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 @Entity
 @Table(name = "stage_evaluations")
 public class StageEvaluation {
@@ -23,10 +24,12 @@ public class StageEvaluation {
 
     @ManyToOne
     @JoinColumn(name = "id_application", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private Application application;
 
     @ManyToOne
     @JoinColumn(name = "id_process_stage", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private ProcessStage processStage;
 
     @Column(name = "total_stage_score", precision = 5, scale = 2)
@@ -40,6 +43,7 @@ public class StageEvaluation {
 
     @ManyToOne
     @JoinColumn(name = "id_committeeMember")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private CommitteeMember committeeMember;
 
     @Column(name = "observations")
