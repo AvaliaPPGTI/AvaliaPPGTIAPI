@@ -100,8 +100,4 @@ public class Candidate {
     @ManyToOne(fetch = FetchType.LAZY) // Lazy fetch is generally good for performance
     @JoinColumn(name = "quota_id") // This links to the 'id' field in the 'quotas' table
     private Quota quota;
-
-    @OneToOne(mappedBy = "candidate", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // mappedBy points to the field in CandidateDocument that owns the relationship
-    private CandidateDocument candidateDocument;
-
 }

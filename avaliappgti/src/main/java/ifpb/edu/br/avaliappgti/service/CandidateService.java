@@ -8,16 +8,12 @@ import ifpb.edu.br.avaliappgti.dto.CandidateDetailDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
 public class CandidateService {
 
     public final CandidateRepository candidateRepository;
-
-    // If Candidate has a @OneToOne mappedBy CandidateDocument
-    // CandidateDocumentRepository here for fetching details, as EntityGraph will handle it.
     public final CandidateDocumentRepository candidateDocumentRepository;
 
     public CandidateService(CandidateRepository candidateRepository, CandidateDocumentRepository candidateDocumentRepository) {
@@ -27,7 +23,7 @@ public class CandidateService {
 
     @Transactional(readOnly = true)
     public Optional<CandidateDetailDTO> getCandidateDetails(Integer candidateId) {
-        // Using the findById with @EntityGraph to fetch Candidate and its associated CandidateDocument and Quota
+        // Fetch the Candidate (now only with 'quota' eagerly loaded, if specified in @EntityGraph)
         Optional<Candidate> candidateOptional = candidateRepository.findById(candidateId);
 
         if (candidateOptional.isEmpty()) {
@@ -35,7 +31,10 @@ public class CandidateService {
         }
 
         Candidate candidate = candidateOptional.get();
-        CandidateDocument document = candidate.getCandidateDocument();
+
+        // explicitly fetch the CandidateDocument using the CandidateDocumentRepository
+        Optional<CandidateDocument> documentOptional = candidateDocumentRepository.findByCandidate(candidate);
+        CandidateDocument document = documentOptional.orElse(null);
 
         CandidateDetailDTO dto = new CandidateDetailDTO();
 

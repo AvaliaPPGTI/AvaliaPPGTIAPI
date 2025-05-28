@@ -8,20 +8,18 @@ import ifpb.edu.br.avaliappgti.dto.CandidateApplicationDetailDTO;
 
 import ifpb.edu.br.avaliappgti.model.Candidate; 
 import ifpb.edu.br.avaliappgti.model.ApplicationVerification;
-import ifpb.edu.br.avaliappgti.model.SelectionProcess;
 import ifpb.edu.br.avaliappgti.repository.ApplicationVerificationRepository; 
 
 import java.util.NoSuchElementException;
-import java.util.Set; // To handle unique candidates
-import java.util.HashSet; // For HashSet
+import java.util.Set;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
+
 
 @Service
 public class ApplicationService {
