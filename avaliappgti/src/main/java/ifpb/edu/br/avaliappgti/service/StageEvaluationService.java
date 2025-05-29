@@ -14,6 +14,7 @@ import ifpb.edu.br.avaliappgti.repository.ProcessStageRepository;
 import ifpb.edu.br.avaliappgti.repository.CommitteeMemberRepository;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationCreateDTO;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationResponseDTO;
+import ifpb.edu.br.avaliappgti.dto.StageEvaluationUpdateTotalScoreDTO;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,4 +85,42 @@ public class StageEvaluationService {
         return stageEvaluationRepository.findById(id)
                 .map(StageEvaluationResponseDTO::new);
     }
+
+    @Transactional
+    public StageEvaluationResponseDTO updateStageTotalScore(
+            Integer stageEvaluationId,
+            StageEvaluationUpdateTotalScoreDTO updateDTO) {
+
+        StageEvaluation stageEvaluation = stageEvaluationRepository.findById(stageEvaluationId)
+                .orElseThrow(() -> new NoSuchElementException("Stage Evaluation not found with ID: " + stageEvaluationId));
+
+        // Get the associated ProcessStage to determine elimination status
+        ProcessStage processStage = stageEvaluation.getProcessStage();
+        if (processStage == null) {
+            // This is a critical consistency check; StageEvaluation should always have a ProcessStage
+            throw new IllegalStateException("StageEvaluation with ID " + stageEvaluationId + " is not linked to a ProcessStage.");
+        }
+
+        // Set the total score directly from the DTO
+        stageEvaluation.setTotalStageScore(updateDTO.getTotalStageScore());
+
+        // Determine elimination status based on the new total score and minimum passing score
+        if (processStage.getMinimumPassingScore() != null &&
+                updateDTO.getTotalStageScore().compareTo(processStage.getMinimumPassingScore()) < 0) {
+            stageEvaluation.setIsEliminatedInStage(true);
+        } else {
+            stageEvaluation.setIsEliminatedInStage(false);
+        }
+
+        // Optional: If you included isEliminatedInStage in the DTO and want client to control it
+        // if (updateDTO.getIsEliminatedInStage() != null) {
+        //     stageEvaluation.setIsEliminatedInStage(updateDTO.getIsEliminatedInStage());
+        // }
+
+        StageEvaluation updatedEntity = stageEvaluationRepository.save(stageEvaluation);
+
+        // Convert and return the DTO to avoid serialization issues
+        return new StageEvaluationResponseDTO(updatedEntity);
+    }
+
 }

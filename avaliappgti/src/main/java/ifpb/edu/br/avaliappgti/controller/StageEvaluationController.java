@@ -3,7 +3,8 @@ package ifpb.edu.br.avaliappgti.controller;
 import ifpb.edu.br.avaliappgti.model.StageEvaluation;
 import ifpb.edu.br.avaliappgti.service.StageEvaluationService;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationCreateDTO; 
-import ifpb.edu.br.avaliappgti.dto.StageEvaluationResponseDTO; 
+import ifpb.edu.br.avaliappgti.dto.StageEvaluationResponseDTO;
+import ifpb.edu.br.avaliappgti.dto.StageEvaluationUpdateTotalScoreDTO;
 import jakarta.validation.Valid; 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +43,26 @@ public class StageEvaluationController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PatchMapping("/{stageEvaluationId}/total-score")
+    public ResponseEntity<StageEvaluationResponseDTO> updateStageTotalScore(
+            @PathVariable Integer stageEvaluationId,
+            @Valid @RequestBody StageEvaluationUpdateTotalScoreDTO updateDTO) {
+        try {
+            StageEvaluationResponseDTO updatedStageEvaluation = stageEvaluationService.updateStageTotalScore(stageEvaluationId, updateDTO);
+            return ResponseEntity.ok(updatedStageEvaluation);
+        } catch (NoSuchElementException e) {
+            System.err.println("Not Found Error: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (IllegalStateException e) {
+            System.err.println("Conflict Error: " + e.getMessage()); // e.g., ProcessStage not linked
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } catch (Exception e) {
+            System.err.println("Error updating total stage score: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
     // add other CRUD operations for StageEvaluation here PUT for updates, DELETE for deletion, GET for listing
 }

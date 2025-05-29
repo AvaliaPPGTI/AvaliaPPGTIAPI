@@ -1,0 +1,965 @@
+    
+{
+    {
+        "candidate_cpf""123.456.789-00",
+        "scoreForm": "link/to/score_form.pdf",
+        "diplomaCertificate": "link/to/diploma_certificate.pdf",
+        "undergraduateTranscript": "link/to/undergraduate_transcript.pdf",
+        "electoralClearance": "link/to/electoral_clearance.pdf",
+        "proofOfResidence": "link/to/proof_of_residence.pdf",
+        "militaryClearance": "link/to/military_clearance.pdf",
+        "quotaDeclarationAdmission": "link/to/quota_declaration_admission.pdf",
+        "quotaDeclarationIf": "link/to/quota_declaration_if.pdf",
+        "registrationClearance": "link/to/registration_clearance.pdf"
+    },
+
+
+    {
+        "email": "joao.silva@example.com",
+        "cpf": "123.456.789-00",
+        "name": "João da Silva",
+        "socialName": null,
+        "sex": "Masculino",
+        "registration": "REG-12345",
+        "registrationState": "PB",
+        "registrationPlace": "João Pessoa",
+        "address": "Rua das Flores",
+        "addressNumber": "100",
+        "addressComplement": "Apt 201",
+        "addressNeighborhood": "Centro",
+        "addressCity": "João Pessoa",
+        "addressState": "PB",
+        "addressZipcode": "58000-000",
+        "cellPhone": "+5583987654321",
+        "phone": "+558332109876",
+        "otherEmail": null,
+        "educationLevel": "Superior Completo",
+        "graduationCourse": "Ciência da Computação",
+        "graduationYear": "2020",
+        "graduationInstitution": "Universidade Federal da Paraíba",
+        "specializationCourse": "Engenharia de Software",
+        "specializationYear": "2022",
+        "specializationInstitution": "Centro Universitário de João Pessoa",
+        "lattesLink": "http://lattes.cnpq.br/1234567890",
+        "quota_id":  1,
+        "candidateDocument": null
+      }
+
+
+      {
+
+
+        "application_id": 1,
+        "stageEvaluation_id": 2,
+        "evaluationCriterion_id": 1,
+        "scoreObtained": 9.1
+      }
+
+
+
+
+  "resultados": [
+    {
+      "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Dominios Diversos",
+      "researchLine_name": "CDI",
+      "candidate_name": "Nicoly Figueredo Pessoa de Almeida",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 90,
+      "interview_stageEvaluation_totalStageScore": 95,
+      "curriculum_stageEvaluation_totalStageScore": 51.83,
+      "application_finalScore": 76.23
+    },
+    {
+      "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Dominios Diversos",
+      "researchLine_name": "CDI",
+      "candidate_name": "Emerson Diego da Costa Araujo",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 95,
+      "interview_stageEvaluation_totalStageScore": 90,
+      "curriculum_stageEvaluation_totalStageScore": 41.25,
+      "application_finalScore": 72.00
+    },
+    {
+      "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Dominios Diversos",
+      "researchLine_name": "CDI",
+      "candidate_name": "Ricardo Anastácio de Souza",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 90,
+      "interview_stageEvaluation_totalStageScore": 95,
+      "curriculum_stageEvaluation_totalStageScore": 33.63,
+      "application_finalScore": 68.95
+    },
+    {
+      "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Dominios Diversos",
+      "researchLine_name": "CDI",
+      "candidate_name": "Alex de Sousa Lima",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 90,
+      "interview_stageEvaluation_totalStageScore": 95,
+      "curriculum_stageEvaluation_totalStageScore": 28.41,
+      "application_finalScore": 66.86
+    },
+    {
+      "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Dominios Diversos",
+      "researchLine_name": "CDI",
+      "candidate_name": "Ivan Zichtl Santos",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 90,
+      "interview_stageEvaluation_totalStageScore": 95,
+      "curriculum_stageEvaluation_totalStageScore": 26.93,
+      "application_finalScore": 66.27
+    },
+    {
+      "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Dominios Diversos",
+      "researchLine_name": "CDI",
+      "candidate_name": "Armindo Inácio de Araújo Júnior",
+      "quota_id": "PCD",
+      "preProject_stageEvaluation_totalStageScore": 95,
+      "interview_stageEvaluation_totalStageScore": 85,
+      "curriculum_stageEvaluation_totalStageScore": 30.46,
+      "application_finalScore": 66.18
+    },
+    {
+      "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Dominios Diversos",
+      "researchLine_name": "CDI",
+      "candidate_name": "Ruanney Nascimento Costa de Almeida",
+      "quota_id": "Sim-Afro",
+      "preProject_stageEvaluation_totalStageScore": 88,
+      "interview_stageEvaluation_totalStageScore": 90,
+      "curriculum_stageEvaluation_totalStageScore": 26.52,
+      "application_finalScore": 64.01
+    },
+    {
+      "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Dominios Diversos",
+      "researchLine_name": "CDI",
+      "candidate_name": "Fabiano Maciel Vieira",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 88,
+      "interview_stageEvaluation_totalStageScore": 90,
+      "curriculum_stageEvaluation_totalStageScore": 26.32,
+      "application_finalScore": 63.93
+    },
+    {
+      "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Dominios Diversos",
+      "researchLine_name": "CDI",
+      "candidate_name": "Diego Juan dos Santos Silva",
+      "quota_id": "Sim-Afro",
+      "preProject_stageEvaluation_totalStageScore": 73,
+      "interview_stageEvaluation_totalStageScore": 80,
+      "curriculum_stageEvaluation_totalStageScore": 12.97,
+      "application_finalScore": 51.09
+    },
+    {
+      "researchTopic_name": "Matching de Dados e Inteligência Artificial para Streaming de Dados",
+      "researchLine_name": "CDI",
+      "candidate_name": "Rodolfo Bolconte Donato",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 94,
+      "interview_stageEvaluation_totalStageScore": 95,
+      "curriculum_stageEvaluation_totalStageScore": 44.94,
+      "application_finalScore": 74.68
+    },
+    {
+      "researchTopic_name": "Métodos de Otimização ou de Aprendizagem de Máquina Aplicados a Problemas das Áreas de Logística, Segurança, Educação, Saúde ou Jogos",
+      "researchLine_name": "CDI",
+      "candidate_name": "Isaac Gomes Veras",
+      "quota_id": "Sim-Afro",
+      "preProject_stageEvaluation_totalStageScore": 90,
+      "interview_stageEvaluation_totalStageScore": 80,
+      "curriculum_stageEvaluation_totalStageScore": 41.07,
+      "application_finalScore": 67.43
+    },
+    {
+      "researchTopic_name": "Métodos de Otimização ou de Aprendizagem de Máquina Aplicados a Problemas das Áreas de Logística, Segurança, Educação, Saúde ou Jogos",
+      "researchLine_name": "CDI",
+      "candidate_name": "Andressa Theotônio Alves de Figueirêdo",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 92,
+      "interview_stageEvaluation_totalStageScore": 100,
+      "curriculum_stageEvaluation_totalStageScore": 8.62,
+      "application_finalScore": 61.05
+    },
+    {
+      "researchTopic_name": "Métodos de Otimização ou de Aprendizagem de Máquina Aplicados a Problemas das Áreas de Logística, Segurança, Educação, Saúde ou Jogos",
+      "researchLine_name": "CDI",
+      "candidate_name": "Ericléverson Alves Ramalho de Figueirêdo",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 85,
+      "interview_stageEvaluation_totalStageScore": 80,
+      "curriculum_stageEvaluation_totalStageScore": 25.5,
+      "application_finalScore": 59.70
+    },
+    {
+      "researchTopic_name": "Métodos de Otimização ou de Aprendizagem de Máquina Aplicados a Problemas das Áreas de Logística, Segurança, Educação, Saúde ou Jogos",
+      "researchLine_name": "CDI",
+      "candidate_name": "Erick Amaro Outra de Lima",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 90,
+      "interview_stageEvaluation_totalStageScore": 70,
+      "curriculum_stageEvaluation_totalStageScore": 24.29,
+      "application_finalScore": 57.72
+    },
+    {
+      "researchTopic_name": "Arquiteturas e Modelos de Inteligência Artificial Aplicados à Educação, Saúde e Cidades",
+      "researchLine_name": "CDI",
+      "candidate_name": "Marina Lima Maraca já Martins",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 77,
+      "interview_stageEvaluation_totalStageScore": 100,
+      "curriculum_stageEvaluation_totalStageScore": 56.83,
+      "application_finalScore": 75.83
+    },
+    {
+      "researchTopic_name": "Inteligência Artificial na Educação",
+      "researchLine_name": "GDS",
+      "candidate_name": "Alíssia Deolinda Oliveira de Lima",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 100,
+      "interview_stageEvaluation_totalStageScore": 100,
+      "curriculum_stageEvaluation_totalStageScore": 25.5,
+      "application_finalScore": 70.20
+    },
+    {
+      "researchTopic_name": "Inteligência Artificial na Educação",
+      "researchLine_name": "GDS",
+      "candidate_name": "Lucas Pessoa Alves",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 85,
+      "interview_stageEvaluation_totalStageScore": 75,
+      "curriculum_stageEvaluation_totalStageScore": 31.62,
+      "application_finalScore": 60.65
+    },
+    {
+      "researchTopic_name": "Inteligência Artificial na Educação",
+      "researchLine_name": "GDS",
+      "candidate_name": "Caroline de Souza Evangelista",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 80,
+      "interview_stageEvaluation_totalStageScore": 100,
+      "curriculum_stageEvaluation_totalStageScore": 19.94,
+      "application_finalScore": 61.98
+    },
+    {
+      "researchTopic_name": "Soluções em Plataformas de Sensoriamento Inteligente para Indústria",
+      "researchLine_name": "GDS",
+      "candidate_name": "José Jefferson Pires Gonçalves",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 73,
+      "interview_stageEvaluation_totalStageScore": 70,
+      "curriculum_stageEvaluation_totalStageScore": 11.64,
+      "application_finalScore": 47.56
+    },
+    {
+      "researchTopic_name": "Aplicação de Técnicas Inteligentes no Contexto de Engenharia de Software",
+      "researchLine_name": "GDS",
+      "candidate_name": "Ana Beatriz de Araújo Farias",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 72,
+      "interview_stageEvaluation_totalStageScore": 90.5,
+      "curriculum_stageEvaluation_totalStageScore": 52.2,
+      "application_finalScore": 69.63
+    },
+    {
+      "researchTopic_name": "Aplicação de Técnicas Inteligentes no Contexto de Engenharia de Software",
+      "researchLine_name": "GDS",
+      "candidate_name": "Bryan Willey Marques Palhano",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 87,
+      "interview_stageEvaluation_totalStageScore": 90,
+      "curriculum_stageEvaluation_totalStageScore": 32.45,
+      "application_finalScore": 66.08
+    },
+    {
+      "researchTopic_name": "Aplicação de Técnicas Inteligentes no Contexto de Engenharia de Software",
+      "researchLine_name": "GDS",
+      "candidate_name": "Daniel Cunha Costa",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 84,
+      "interview_stageEvaluation_totalStageScore": 92,
+      "curriculum_stageEvaluation_totalStageScore": 27.92,
+      "application_finalScore": 63.97
+    },
+    {
+      "researchTopic_name": "Aplicação de Técnicas Inteligentes no Contexto de Engenharia de Software",
+      "researchLine_name": "GDS",
+      "candidate_name": "Jonas Bernardino de Lima",
+      "quota_id": "Sim - Indígena",
+      "preProject_stageEvaluation_totalStageScore": 78,
+      "interview_stageEvaluation_totalStageScore": 72,
+      "curriculum_stageEvaluation_totalStageScore": 38.19,
+      "application_finalScore": 60.28
+    },
+    {
+      "researchTopic_name": "Boas Práticas em Gerenciamento de Projetos de Software: Otimizando a Colaboração e Produtividade em Equipes Virtuais ou Híbridos",
+      "researchLine_name": "GDS",
+      "candidate_name": "Tiago Diniz Brasileiro Lira",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 77,
+      "interview_stageEvaluation_totalStageScore": 90,
+      "curriculum_stageEvaluation_totalStageScore": 35.4,
+      "application_finalScore": 64.26
+    },
+    {
+      "researchTopic_name": "Abordagens Multidisciplinares com Gamificação, Metodologias Ativas e Interação",
+      "researchLine_name": "GDS",
+      "candidate_name": "Márcia Cristina Rafael de Lima",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 90,
+      "interview_stageEvaluation_totalStageScore": 90,
+      "curriculum_stageEvaluation_totalStageScore": 53.69,
+      "application_finalScore": 75.48
+    },
+    {
+      "researchTopic_name": "Abordagens Multidisciplinares com Gamificação, Metodologias Ativas e Interação",
+      "researchLine_name": "GDS",
+      "candidate_name": "Lucyane Kelly Pereira da Silva",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 95,
+      "interview_stageEvaluation_totalStageScore": 90,
+      "curriculum_stageEvaluation_totalStageScore": 41.63,
+      "application_finalScore": 72.15
+    },
+    {
+      "researchTopic_name": "Abordagens Multidisciplinares com Gamificação, Metodologias Ativas e Interação",
+      "researchLine_name": "GDS",
+      "candidate_name": "Álekiss Manço de Melo",
+      "quota_id": "PCD",
+      "preProject_stageEvaluation_totalStageScore": 90,
+      "interview_stageEvaluation_totalStageScore": 75,
+      "curriculum_stageEvaluation_totalStageScore": 45.5,
+      "application_finalScore": 67.70
+    },
+    {
+      "researchTopic_name": "Abordagens Multidisciplinares com Gamificação, Metodologias Ativas e Interação",
+      "researchLine_name": "GDS",
+      "candidate_name": "Severino Pereira das Chagas Neto",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 80,
+      "interview_stageEvaluation_totalStageScore": 90,
+      "curriculum_stageEvaluation_totalStageScore": 40.53,
+      "application_finalScore": 67.21
+    },
+    {
+      "researchTopic_name": "Abordagens Multidisciplinares com Gamificação, Metodologias Ativas e Interação",
+      "researchLine_name": "GDS",
+      "candidate_name": "Thiago Alexandre Agustinho Dos Santos",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 95,
+      "interview_stageEvaluation_totalStageScore": 90,
+      "curriculum_stageEvaluation_totalStageScore": 19.6,
+      "application_finalScore": 63.34
+    },
+    {
+      "researchTopic_name": "Abordagens Multidisciplinares com Gamificação, Metodologias Ativas e Interação",
+      "researchLine_name": "GDS",
+      "candidate_name": "Diogo de Mendonça Neves",
+      "quota_id": "PCD",
+      "preProject_stageEvaluation_totalStageScore": 80,
+      "interview_stageEvaluation_totalStageScore": 75,
+      "curriculum_stageEvaluation_totalStageScore": 35.74,
+      "application_finalScore": 60.80
+    },
+    {
+      "researchTopic_name": "Uso de Blockchain e Inteligência Artificial na Transformação Digital do SisresearchTopic_name Único de Saúde (SUS)",
+      "researchLine_name": "GDS",
+      "candidate_name": "Fabiano Santana Ferreira",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 75,
+      "interview_stageEvaluation_totalStageScore": 71,
+      "curriculum_stageEvaluation_totalStageScore": 33.98,
+      "application_finalScore": 57.39
+    },
+    {
+      "researchTopic_name": "Desenvolvimento de SisresearchTopic_names Blockchain Apoiados pela Inteligência Artificial",
+      "researchLine_name": "GDS",
+      "candidate_name": "Gustavo Lira Santos",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 95,
+      "interview_stageEvaluation_totalStageScore": 87,
+      "curriculum_stageEvaluation_totalStageScore": 16.54,
+      "application_finalScore": 61.22
+    },
+    {
+      "researchTopic_name": "Redes 5G Privadas e Computação na Borda para Indústria 4.0",
+      "researchLine_name": "RSD",
+      "candidate_name": "Rafael Cavalcante Chaves",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 88,
+      "interview_stageEvaluation_totalStageScore": 100,
+      "curriculum_stageEvaluation_totalStageScore": 56.5,
+      "application_finalScore": 79.00
+    },
+    {
+      "researchTopic_name": "Redes 5G Privadas e Computação na Borda para Indústria 4.0",
+      "researchLine_name": "RSD",
+      "candidate_name": "Demesio Oliveira",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 73,
+      "interview_stageEvaluation_totalStageScore": 80,
+      "curriculum_stageEvaluation_totalStageScore": 42.75,
+      "application_finalScore": 63.00
+    },
+    {
+      "researchTopic_name": "Redes 5G Privadas e Computação na Borda para Indústria 4.0",
+      "researchLine_name": "RSD",
+      "candidate_name": "José Silvestre da Silva Galvão",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 82,
+      "interview_stageEvaluation_totalStageScore": 85,
+      "curriculum_stageEvaluation_totalStageScore": 20.96,
+      "application_finalScore": 58.48
+    },
+    {
+      "researchTopic_name": "Redes 5G Privadas e Computação na Borda para Indústria 4.0",
+      "researchLine_name": "RSD",
+      "candidate_name": "Diego Figueiredo",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 73,
+      "interview_stageEvaluation_totalStageScore": 75,
+      "curriculum_stageEvaluation_totalStageScore": 30.99,
+      "application_finalScore": 56.80
+    },
+    {
+      "researchTopic_name": "Redes 5G Privadas e Computação na Borda para Indústria 4.0",
+      "researchLine_name": "RSD",
+      "candidate_name": "Alysson Pereira do Nascimento",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 74,
+      "interview_stageEvaluation_totalStageScore": 85,
+      "curriculum_stageEvaluation_totalStageScore": 22.18,
+      "application_finalScore": 56.57
+    },
+    {
+      "researchTopic_name": "Desenvolvimento ou avaliação de solução computacional no contexto de redes",
+      "researchLine_name": "RSD",
+      "candidate_name": "Cinaglia Adagles da Silva",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 97,
+      "interview_stageEvaluation_totalStageScore": 100,
+      "curriculum_stageEvaluation_totalStageScore": 35.57,
+      "application_finalScore": 73.33
+    },
+    {
+      "researchTopic_name": "Desenvolvimento ou avaliação de solução computacional no contexto de redes",
+      "researchLine_name": "RSD",
+      "candidate_name": "Cleilson Gurgel de Brito",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 80,
+      "interview_stageEvaluation_totalStageScore": 78,
+      "curriculum_stageEvaluation_totalStageScore": 45.8,
+      "application_finalScore": 65.72
+    },
+    {
+      "researchTopic_name": "Desenvolvimento ou avaliação de solução computacional no contexto de redes",
+      "researchLine_name": "RSD",
+      "candidate_name": "Paulemir de Sousa Soares",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 80,
+      "interview_stageEvaluation_totalStageScore": 75,
+      "curriculum_stageEvaluation_totalStageScore": 34.4,
+      "application_finalScore": 60.26
+    },
+    {
+      "researchTopic_name": "Desenvolvimento ou avaliação de solução computacional no contexto de redes",
+      "researchLine_name": "RSD",
+      "candidate_name": "Tiago José Bandeira Lourenço",
+      "quota_id": null,
+      "preProject_stageEvaluation_totalStageScore": 80,
+      "interview_stageEvaluation_totalStageScore": 78,
+      "curriculum_stageEvaluation_totalStageScore": 31.75,
+      "application_finalScore": 60.10
+    }
+  ]
+
+
+
+
+  [
+    [
+        {
+          "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Domínios Diversos",
+          "researchLine_name": "CDI",
+          "candidate_name": "Lucas Guimarães da Silva",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 90,
+          "interview_stageEvaluation_totalStageScore": 85,
+          "curriculum_stageEvaluation_totalStageScore": 27.01,
+          "application_finalScore": 63.30
+        },
+        {
+          "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Domínios Diversos",
+          "researchLine_name": "CDI",
+          "candidate_name": "Arthur Rolim de Oliveira",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 80,
+          "interview_stageEvaluation_totalStageScore": 80,
+          "curriculum_stageEvaluation_totalStageScore": 31.98,
+          "application_finalScore": 60.79
+        },
+        {
+          "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Domínios Diversos",
+          "researchLine_name": "CDI",
+          "candidate_name": "Euridyce Karla Carvalho das Graças",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 74,
+          "interview_stageEvaluation_totalStageScore": 70,
+          "curriculum_stageEvaluation_totalStageScore": 41.34,
+          "application_finalScore": 59.74
+        },
+        {
+          "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Domínios Diversos",
+          "researchLine_name": "CDI",
+          "candidate_name": "Felipe Targino do Nascimento",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 61,
+          "interview_stageEvaluation_totalStageScore": 70,
+          "curriculum_stageEvaluation_totalStageScore": 50.19,
+          "application_finalScore": 59.38
+        },
+        {
+          "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Domínios Diversos",
+          "researchLine_name": "CDI",
+          "candidate_name": "Isaac Gomes Veras",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 65,
+          "interview_stageEvaluation_totalStageScore": 75,
+          "curriculum_stageEvaluation_totalStageScore": 41.07,
+          "application_finalScore": 58.43
+        },
+        {
+          "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Domínios Diversos",
+          "researchLine_name": "CDI",
+          "candidate_name": "Leanderson Coelho dos Santos",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 85,
+          "interview_stageEvaluation_totalStageScore": 75,
+          "curriculum_stageEvaluation_totalStageScore": 23.17,
+          "application_finalScore": 57.27
+        },
+        {
+          "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Domínios Diversos",
+          "researchLine_name": "CDI",
+          "candidate_name": "Sávio Murillo Dias Bastos",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 79,
+          "interview_stageEvaluation_totalStageScore": 80,
+          "curriculum_stageEvaluation_totalStageScore": 22.68,
+          "application_finalScore": 56.77
+        },
+        {
+          "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Domínios Diversos",
+          "researchLine_name": "CDI",
+          "candidate_name": "André Pontes Vaz de Medeiros Filho",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 77,
+          "interview_stageEvaluation_totalStageScore": 75,
+          "curriculum_stageEvaluation_totalStageScore": 23.06,
+          "application_finalScore": 54.82
+        },
+        {
+          "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Domínios Diversos",
+          "researchLine_name": "CDI",
+          "candidate_name": "Julio Cezar Rodrigues Trindade",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 90,
+          "interview_stageEvaluation_totalStageScore": 70,
+          "curriculum_stageEvaluation_totalStageScore": 9.07,
+          "application_finalScore": 51.63
+        },
+        {
+          "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Domínios Diversos",
+          "researchLine_name": "CDI",
+          "candidate_name": "Thiago Diniz Tomé de Lima",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 73,
+          "interview_stageEvaluation_totalStageScore": 70,
+          "curriculum_stageEvaluation_totalStageScore": 14.4,
+          "application_finalScore": 48.66
+        },
+        {
+          "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Domínios Diversos",
+          "researchLine_name": "CDI",
+          "candidate_name": "Edglay Barros",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 65,
+          "interview_stageEvaluation_totalStageScore": 70,
+          "curriculum_stageEvaluation_totalStageScore": 14,
+          "application_finalScore": 46.10
+        },
+        {
+          "researchTopic_name": "Inteligência Artificial na Educação",
+          "researchLine_name": "GDS",
+          "candidate_name": "Lucas Magno de Oliveira Aragão",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 65,
+          "interview_stageEvaluation_totalStageScore": 80,
+          "curriculum_stageEvaluation_totalStageScore": 36.28,
+          "application_finalScore": 58.01
+        },
+        {
+          "researchTopic_name": "Inteligência Artificial na Educação",
+          "researchLine_name": "GDS",
+          "candidate_name": "Daniel dos Santos Brandão",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 60,
+          "interview_stageEvaluation_totalStageScore": 80,
+          "curriculum_stageEvaluation_totalStageScore": 33.2,
+          "application_finalScore": 55.28
+        },
+        {
+          "researchTopic_name": "Inteligência Artificial na Educação",
+          "researchLine_name": "GDS",
+          "candidate_name": "Osmar Vieira de Sousa",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 60,
+          "interview_stageEvaluation_totalStageScore": 75,
+          "curriculum_stageEvaluation_totalStageScore": 23.4,
+          "application_finalScore": 49.86
+        },
+        {
+          "researchTopic_name": "Inteligência Artificial na Educação",
+          "researchLine_name": "GDS",
+          "candidate_name": "Carlos Rodrigo Costa da Silva",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 65,
+          "interview_stageEvaluation_totalStageScore": 70,
+          "curriculum_stageEvaluation_totalStageScore": 15.96,
+          "application_finalScore": 46.88
+        },
+        {
+          "researchTopic_name": "Inteligência Artificial na Educação",
+          "researchLine_name": "GDS",
+          "candidate_name": "Wesley Adonai Pereira da Silva",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 60,
+          "interview_stageEvaluation_totalStageScore": 70,
+          "curriculum_stageEvaluation_totalStageScore": 14.57,
+          "application_finalScore": 44.83
+        },
+        {
+          "researchTopic_name": "Inteligência Artificial na Educação",
+          "researchLine_name": "GDS",
+          "candidate_name": "Cris Henrique Silva",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 65,
+          "interview_stageEvaluation_totalStageScore": 70,
+          "curriculum_stageEvaluation_totalStageScore": 9.14,
+          "application_finalScore": 44.16
+        },
+        {
+          "researchTopic_name": "Aplicação de Técnicas inteligentes no Contexto de Engenharia de Software",
+          "researchLine_name": "GDS",
+          "candidate_name": "Ivan Fillipe Rodrigues dos Santos",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 66,
+          "interview_stageEvaluation_totalStageScore": 94,
+          "curriculum_stageEvaluation_totalStageScore": 33.63,
+          "application_finalScore": 61.45
+        },
+        {
+          "researchTopic_name": "Aplicação de Técnicas Inteligentes no Contexto de Engenharia de Software",
+          "researchLine_name": "GDS",
+          "candidate_name": "Keilla Vitória Felipe Bezerra",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 81,
+          "interview_stageEvaluation_totalStageScore": 80,
+          "curriculum_stageEvaluation_totalStageScore": 26.91,
+          "application_finalScore": 59.06
+        },
+        {
+          "researchTopic_name": "Aplicação de Técnicas Inteligentes no Contexto de Engenharia de Software",
+          "researchLine_name": "GDS",
+          "candidate_name": "Ricardo Pereira Lins",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 88,
+          "interview_stageEvaluation_totalStageScore": 72.5,
+          "curriculum_stageEvaluation_totalStageScore": 23.28,
+          "application_finalScore": 57.46
+        },
+        {
+          "researchTopic_name": "Aplicação de Técnicas Inteligentes no Contexto de Engenharia de Software",
+          "researchLine_name": "GDS",
+          "candidate_name": "Isaque Mendes Bezerra",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 66,
+          "interview_stageEvaluation_totalStageScore": 84.5,
+          "curriculum_stageEvaluation_totalStageScore": 25.41,
+          "application_finalScore": 55.31
+        },
+        {
+          "researchTopic_name": "Aplicação de Técnicas Inteligentes no Contexto de Engenharia de Software",
+          "researchLine_name": "GDS",
+          "candidate_name": "Rodrigo Resende Santos",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 75,
+          "interview_stageEvaluation_totalStageScore": 74,
+          "curriculum_stageEvaluation_totalStageScore": 25,
+          "application_finalScore": 54.70
+        },
+        {
+          "researchTopic_name": "Aplicação de Técnicas Inteligentes no Contexto de Engenharia de Software",
+          "researchLine_name": "GDS",
+          "candidate_name": "Damião Otávio da Conceição",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 80,
+          "interview_stageEvaluation_totalStageScore": 77,
+          "curriculum_stageEvaluation_totalStageScore": 13.86,
+          "application_finalScore": 52.64
+        },
+        {
+          "researchTopic_name": "Aplicação de Técnicas Inteligentes no Contexto de Engenharia de Software",
+          "researchLine_name": "GDS",
+          "candidate_name": "Andrew Galvão de Figueiredo Oliveira",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 84,
+          "interview_stageEvaluation_totalStageScore": 72,
+          "curriculum_stageEvaluation_totalStageScore": 14.41,
+          "application_finalScore": 52.56
+        },
+        {
+          "researchTopic_name": "Boas Práticas em Gerenciamento de Projetos de Software: Otimizando a Colaboração e Produtividade em Equipes Virtuais ou Híbridos",
+          "researchLine_name": "GDS",
+          "candidate_name": "Mateus de Morais Lima",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 82,
+          "interview_stageEvaluation_totalStageScore": 75,
+          "curriculum_stageEvaluation_totalStageScore": 39.26,
+          "application_finalScore": 62.80
+        },
+        {
+          "researchTopic_name": "Boas Práticas em Gerenciamento de Projetos de Software: Otimizando a Colaboração e Produtividade em Equipes Virtuais ou Híbridos",
+          "researchLine_name": "GDS",
+          "candidate_name": "Hugo Nathan Soares Diniz",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 82,
+          "interview_stageEvaluation_totalStageScore": 76,
+          "curriculum_stageEvaluation_totalStageScore": 33.91,
+          "application_finalScore": 60.96
+        },
+        {
+          "researchTopic_name": "Boas Práticas em Gerenciamento de Projetos de Software: Otimizando a Colaboração e Produtividade em Equipes Virtuais ou Híbridos",
+          "researchLine_name": "GDS",
+          "candidate_name": "Adilson Soares da Silva",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 70,
+          "interview_stageEvaluation_totalStageScore": 70,
+          "curriculum_stageEvaluation_totalStageScore": 47.08,
+          "application_finalScore": 60.83
+        },
+        {
+          "researchTopic_name": "Boas Práticas em Gerenciamento de Projetos de Software: Otimizando a Colaboração e Produtividade em Equipes Virtuais ou Híbridos",
+          "researchLine_name": "GDS",
+          "candidate_name": "Jessé Rangel Queiroz Duarte",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 76,
+          "interview_stageEvaluation_totalStageScore": 70,
+          "curriculum_stageEvaluation_totalStageScore": 28.16,
+          "application_finalScore": 55.06
+        },
+        {
+          "researchTopic_name": "Boas Práticas em Gerenciamento de Projetos de Software: Otimizando a Colaboração e Produtividade em Equipes Virtuais ou Híbridos",
+          "researchLine_name": "GDS",
+          "candidate_name": "Évelyn Milenna da Nóbrega",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 65,
+          "interview_stageEvaluation_totalStageScore": 70,
+          "curriculum_stageEvaluation_totalStageScore": 31.25,
+          "application_finalScore": 53.00
+        },
+        {
+          "researchTopic_name": "Gestão, Desenvolvimento e Testes em Projetos Ágeis de software",
+          "researchLine_name": "GDS",
+          "candidate_name": "Mayron da Costa Bezerra",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 60,
+          "interview_stageEvaluation_totalStageScore": 70,
+          "curriculum_stageEvaluation_totalStageScore": 41.42,
+          "application_finalScore": 55.57
+        },
+        {
+          "researchTopic_name": "Gestão, Desenvolvimento e Testes em Projetos Ágeis de software",
+          "researchLine_name": "GDS",
+          "candidate_name": "Hugo Nathan Soares Diniz",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 60,
+          "interview_stageEvaluation_totalStageScore": 70,
+          "curriculum_stageEvaluation_totalStageScore": 33.91,
+          "application_finalScore": 52.56
+        },
+        {
+          "researchTopic_name": "Gestão, Desenvolvimento e Testes em Projetos Ágeis de software",
+          "researchLine_name": "GDS",
+          "candidate_name": "Rodrigo Resende Santos",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 60,
+          "interview_stageEvaluation_totalStageScore": 70,
+          "curriculum_stageEvaluation_totalStageScore": 25,
+          "application_finalScore": 49.00
+        },
+        {
+          "researchTopic_name": "Gestão, Desenvolvimento e Testes em Projetos Ágeis de software",
+          "researchLine_name": "GDS",
+          "candidate_name": "Marcelo Jardim Cardoso",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 60,
+          "interview_stageEvaluation_totalStageScore": 75,
+          "curriculum_stageEvaluation_totalStageScore": 20.3,
+          "application_finalScore": 48.62
+        },
+        {
+          "researchTopic_name": "Abordagens Multidisciplinares com Gamificação, Metodologias Ativas e IHC",
+          "researchLine_name": "GDS",
+          "candidate_name": "Edmagno do Nascimento Lins",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 80,
+          "interview_stageEvaluation_totalStageScore": 80,
+          "curriculum_stageEvaluation_totalStageScore": 33.3,
+          "application_finalScore": 61.32
+        },
+        {
+          "researchTopic_name": "Abordagens Multidisciplinares com Gamificação, Metodologias Ativas e IHC",
+          "researchLine_name": "GDS",
+          "candidate_name": "Talitta Ferreira Vieira Lima",
+          "quota_id": null,
+          "preProject_stageEvaluation_totalStageScore": 65,
+          "interview_stageEvaluation_totalStageScore": 80,
+          "curriculum_stageEvaluation_totalStageScore": 24.4,
+          "application_finalScore": 53.26
+        }
+    ]
+    [
+
+
+        [
+            {
+              "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Domínios Diversos",
+              "researchLine_name": "CDI",
+              "candidate_name": "Guilherme de Medeiros Ferreira",
+              "quota_id": null,
+              "preProject_stageEvaluation_totalStageScore": 95,
+              "interview_stageEvaluation_totalStageScore": null,
+              "curriculum_stageEvaluation_totalStageScore": 17.94,
+              "application_finalScore": null,
+              "reason": "Desclassificado entrevista"
+            },
+            {
+              "researchTopic_name": "Ciência de Dados e Inteligência Artificial em Domínios Diversos",
+              "researchLine_name": "CDI",
+              "candidate_name": "Gabriel Caetano Silva Motta",
+              "quota_id": null,
+              "preProject_stageEvaluation_totalStageScore": 81,
+              "interview_stageEvaluation_totalStageScore": null,
+              "curriculum_stageEvaluation_totalStageScore": 5,
+              "application_finalScore": null,
+              "reason": "Desclassificado entrevista"
+            },
+            {
+              "researchTopic_name": "Métodos de Otimização ou de Aprendizagem de Máquina Aplicados a Problemas das Áreas de Logística, Segurança, Educação, Saúde ou Jogos",
+              "researchLine_name": "CDI",
+              "candidate_name": "Esdras Rocha de Oliveira",
+              "quota_id": null,
+              "preProject_stageEvaluation_totalStageScore": 85,
+              "interview_stageEvaluation_totalStageScore": 60,
+              "curriculum_stageEvaluation_totalStageScore": 38.8,
+              "application_finalScore": null,
+              "reason": "Desclassificado entrevista"
+            },
+            {
+              "researchTopic_name": "Inteligência Artificial na Educação",
+              "researchLine_name": "GDS",
+              "candidate_name": "José Rocha do Amaral Neto",
+              "quota_id": null,
+              "preProject_stageEvaluation_totalStageScore": 65,
+              "interview_stageEvaluation_totalStageScore": null,
+              "curriculum_stageEvaluation_totalStageScore": 45.83,
+              "application_finalScore": null,
+              "reason": "Desclassificado entrevista"
+            },
+            {
+              "researchTopic_name": "Inteligência Artificial na Educação",
+              "researchLine_name": "GDS",
+              "candidate_name": "Manoel Ferraz da Silva Filho",
+              "quota_id": null,
+              "preProject_stageEvaluation_totalStageScore": 70,
+              "interview_stageEvaluation_totalStageScore": null,
+              "curriculum_stageEvaluation_totalStageScore": 27.46,
+              "application_finalScore": null,
+              "reason": "Desclassificado entrevista"
+            },
+            {
+              "researchTopic_name": "Aplicação de Técnicas Inteligentes no Contexto de Engenharia de Software",
+              "researchLine_name": "GDS",
+              "candidate_name": "José Matheus de Lima Medeiros",
+              "quota_id": null,
+              "preProject_stageEvaluation_totalStageScore": 84,
+              "interview_stageEvaluation_totalStageScore": null,
+              "curriculum_stageEvaluation_totalStageScore": 24.78,
+              "application_finalScore": null,
+              "reason": "Desclassificado entrevista"
+            },
+            {
+              "researchTopic_name": "Abordagens Multidisciplinares com Gamificação, Metodologias Ativas e IHC",
+              "researchLine_name": "GDS",
+              "candidate_name": "José Carlos Junior",
+              "quota_id": null,
+              "preProject_stageEvaluation_totalStageScore": 60,
+              "interview_stageEvaluation_totalStageScore": 55,
+              "curriculum_stageEvaluation_totalStageScore": 27.02,
+              "application_finalScore": null,
+              "reason": "Desclassificado entrevista"
+            },
+            {
+              "researchTopic_name": "Abordagens Multidisciplinares com Gamificação, Metodologias Ativas e IHC",
+              "researchLine_name": "GDS",
+              "candidate_name": "José Wilson Alves de Souza",
+              "quota_id": null,
+              "preProject_stageEvaluation_totalStageScore": 65,
+              "interview_stageEvaluation_totalStageScore": 50,
+              "curriculum_stageEvaluation_totalStageScore": 16.57,
+              "application_finalScore": null,
+              "reason": "Desclassificado entrevista"
+            },
+            {
+              "researchTopic_name": "Abordagens Multidisciplinares com Gamificação, Metodologias Ativas e IHC",
+              "researchLine_name": "GDS",
+              "candidate_name": "Wesley Adonai Pereira da Silva",
+              "quota_id": null,
+              "preProject_stageEvaluation_totalStageScore": 45,
+              "interview_stageEvaluation_totalStageScore": 60,
+              "curriculum_stageEvaluation_totalStageScore": 14.57,
+              "application_finalScore": null,
+              "reason": "Desclassificado entrevista"
+            },
+            {
+              "researchTopic_name": "Desenvolvimento de Sistemas Blockchain Apoiados pela Inteligência Artificial",
+              "researchLine_name": null,
+              "candidate_name": "Umer Masood",
+              "quota_id": null,
+              "preProject_stageEvaluation_totalStageScore": 91,
+              "interview_stageEvaluation_totalStageScore": null,
+              "curriculum_stageEvaluation_totalStageScore": 5.5,
+              "application_finalScore": null,
+              "reason": "Desclassificado entrevista"
+            },
+            {
+              "researchTopic_name": "Sistemas embarcados e distribuídos para aplicações biomédicas",
+              "researchLine_name": "RSD",
+              "candidate_name": "Joaquim Felix Da Silva Filho",
+              "quota_id": 1,
+              "preProject_stageEvaluation_totalStageScore": 71,
+              "interview_stageEvaluation_totalStageScore": null,
+              "curriculum_stageEvaluation_totalStageScore": 13.45,
+              "application_finalScore": null,
+              "reason": "Desclassificado entrevista"
+            }
+          ]
+
+
+    ]
+
+
+
+
+  ]
+}
+
