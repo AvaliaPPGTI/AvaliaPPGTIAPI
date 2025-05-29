@@ -28,6 +28,19 @@ public class ApplicationController {
         return ResponseEntity.ok(applications);
     }
 
+    @GetMapping("/by-candidate/{candidateId}")
+    public ResponseEntity<Application> getApplicationByCandidateId(@PathVariable Integer candidateId) {
+        try {
+            Optional<Application> applicationOptional = applicationService.getApplicationByCandidateId(candidateId);
+            return applicationOptional
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            System.err.println("Error fetching application for candidate " + candidateId + ": " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @GetMapping("/details-by-process/{processId}")
     public ResponseEntity<List<CandidateApplicationDetailDTO>> getCandidateApplicationDetailsByProcess(
             @PathVariable Integer processId) {

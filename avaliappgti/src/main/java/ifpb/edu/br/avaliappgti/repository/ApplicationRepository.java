@@ -34,4 +34,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Intege
     // Find an Application by its Candidate and ResearchTopic
     // The 'candidate' and 'researchTopic' here refer to the field names in the Application entity.
     Optional<Application> findByCandidateAndResearchTopic(Candidate candidate, ResearchTopic researchTopic);
+
+    Optional<Application> findByCandidateId(Integer candidateId);
 }
