@@ -35,7 +35,7 @@ public interface StageEvaluationRepository extends JpaRepository<StageEvaluation
     StageEvaluation save(StageEvaluation entity);
 
     @Override
-    @EntityGraph(attributePaths = {"application.candidate", "processStage", "committeeMember"})
+    @EntityGraph(attributePaths = {"application", "application.candidate", "application.selectionProcess", "processStage", "committeeMember"})
     Optional<StageEvaluation> findById(Integer id);
 
 }
