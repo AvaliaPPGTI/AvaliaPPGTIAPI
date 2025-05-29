@@ -323,7 +323,7 @@ public class DatabaseSeeder {
 
     //         StageEvaluation stageEvaluation2 = new StageEvaluation();
     //         stageEvaluation2.setApplication(application);
-    //         stageEvaluation2.setProcessStage(stage1);
+    //         stageEvaluation2.setProcessStage(stage2);
     //         // stageEvaluation2.setTotalStageScore(BigDecimal.valueOf(90.0));
     //         stageEvaluation2.setIsEliminatedInStage(false);
     //         stageEvaluation2.setEvaluationDate(LocalDateTime.now());
