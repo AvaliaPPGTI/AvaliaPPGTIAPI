@@ -44,6 +44,11 @@ public class ApplicationService {
     }
 
     @Transactional(readOnly = true)
+    public Optional<Application> getApplicationByCandidateId(Integer candidateId) {
+        return applicationRepository.findByCandidateId(candidateId);
+    }
+
+    @Transactional(readOnly = true)
     public List<Application> getAllApplications() {
         return applicationRepository.findAll();
     }
