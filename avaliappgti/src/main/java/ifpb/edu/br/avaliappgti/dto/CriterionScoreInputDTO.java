@@ -11,13 +11,13 @@ public class CriterionScoreInputDTO {
 
     @NotNull(message = "Score value is required")
     @DecimalMin(value = "0.0", message = "Score must be non-negative")
-    private BigDecimal scoreValue;
+    private BigDecimal scoreObtained;
 
     public CriterionScoreInputDTO() {}
 
-    public CriterionScoreInputDTO(Integer evaluationCriterionId, BigDecimal scoreValue) {
+    public CriterionScoreInputDTO(Integer evaluationCriterionId, BigDecimal scoreObtained) {
         this.evaluationCriterionId = evaluationCriterionId;
-        this.scoreValue = scoreValue;
+        this.scoreObtained = scoreObtained;
     }
 
     public Integer getEvaluationCriterionId() {
@@ -28,11 +28,11 @@ public class CriterionScoreInputDTO {
         this.evaluationCriterionId = evaluationCriterionId;
     }
 
-    public BigDecimal getScoreValue() {
-        return scoreValue;
+    public BigDecimal getScoreObtained() {
+        return scoreObtained;
     }
 
-    public void setScoreValue(BigDecimal scoreValue) {
-        this.scoreValue = scoreValue;
+    public void setScoreObtained(BigDecimal scoreObtained) {
+        this.scoreObtained = scoreObtained;
     }
 }

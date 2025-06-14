@@ -79,7 +79,7 @@ class SaveCriterionScoresRequestTest {
         // There should be violations related to nested CriterionScoreInputDTO properties
         boolean foundNestedViolation = violations.stream().anyMatch(v ->
                 v.getPropertyPath().toString().startsWith("scores[1].evaluationCriterionId") ||
-                        v.getPropertyPath().toString().startsWith("scores[1].scoreValue")
+                        v.getPropertyPath().toString().startsWith("scores[1].scoreObtained")
         );
 
         assertTrue(foundNestedViolation);

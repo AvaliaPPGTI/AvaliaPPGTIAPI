@@ -7,24 +7,24 @@ import java.math.BigDecimal;
 
 public class UpdateCriterionScoreDTO {
 
-    @NotNull(message = "Score value is required")
+    @NotNull(message = "Score obtained is required")
     @DecimalMin(value = "0.0", message = "Score must be non-negative")
-    private BigDecimal scoreValue;
+    private BigDecimal scoreObtained;
 
     // Constructors
     public UpdateCriterionScoreDTO() {
     }
 
-    public UpdateCriterionScoreDTO(BigDecimal scoreValue) {
-        this.scoreValue = scoreValue;
+    public UpdateCriterionScoreDTO(BigDecimal scoreObtained) {
+        this.scoreObtained = scoreObtained;
     }
 
     // Getter and Setter
-    public BigDecimal getScoreValue() {
-        return scoreValue;
+    public BigDecimal getScoreObtained() {
+        return scoreObtained;
     }
 
-    public void setScoreValue(BigDecimal scoreValue) {
-        this.scoreValue = scoreValue;
+    public void setScoreObtained(BigDecimal scoreObtained) {
+        this.scoreObtained = scoreObtained;
     }
 }

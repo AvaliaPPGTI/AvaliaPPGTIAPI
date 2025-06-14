@@ -64,16 +64,16 @@ public class CriterionScoreService {
     //         Optional<CriterionScore> existingScore = criterionScoreRepository.findByStageEvaluationAndEvaluationCriterion(stageEvaluation, evaluationCriterion);
     //         if (existingScore.isPresent()) {
     //             CriterionScore scoreToUpdate = existingScore.get();
-    //             scoreToUpdate.setScoreObtained(scoreDto.getScoreValue());
+    //             scoreToUpdate.setScoreObtained(scoreDto.getScoreObtained());
     //             criterionScoreRepository.save(scoreToUpdate);
     //         } else {
     //             CriterionScore newScore = new CriterionScore();
     //             newScore.setStageEvaluation(stageEvaluation);
     //             newScore.setEvaluationCriterion(evaluationCriterion);
-    //             newScore.setScoreObtained(scoreDto.getScoreValue());
+    //             newScore.setScoreObtained(scoreDto.getScoreObtained());
     //             criterionScoreRepository.save(newScore);
     //         }
-    //         totalScore = totalScore.add(scoreDto.getScoreValue());
+    //         totalScore = totalScore.add(scoreDto.getScoreObtained());
     //     }
 
     //     stageEvaluation.setTotalStageScore(totalScore);
@@ -114,9 +114,9 @@ public class CriterionScoreService {
             CriterionScore currentScore;
             if (existingScore.isPresent()) {
                 currentScore = existingScore.get();
-                currentScore.setScoreObtained(scoreDto.getScoreValue());
+                currentScore.setScoreObtained(scoreDto.getScoreObtained());
             } else {
-                currentScore = new CriterionScore(stageEvaluation, evaluationCriterion, scoreDto.getScoreValue());
+                currentScore = new CriterionScore(stageEvaluation, evaluationCriterion, scoreDto.getScoreObtained());
             }
             leafScores.add(criterionScoreRepository.save(currentScore));
         }
@@ -224,7 +224,7 @@ public class CriterionScoreService {
                 .orElseThrow(() -> new NoSuchElementException("CriterionScore not found with ID: " + criterionScoreId));
 
         // 2. Update the score value
-        criterionScore.setScoreObtained(updateDTO.getScoreValue());
+        criterionScore.setScoreObtained(updateDTO.getScoreObtained());
         criterionScoreRepository.save(criterionScore);
 
         // 3. Recalculate the total score for the entire stage

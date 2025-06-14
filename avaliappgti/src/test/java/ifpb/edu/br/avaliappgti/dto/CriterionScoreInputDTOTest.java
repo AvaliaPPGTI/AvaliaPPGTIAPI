@@ -25,7 +25,7 @@ class CriterionScoreInputDTOTest {
         Set<ConstraintViolation<CriterionScoreInputDTO>> violations = validator.validate(dto);
         assertTrue(violations.isEmpty());
         assertEquals(1, dto.getEvaluationCriterionId());
-        assertEquals(new BigDecimal("75.50"), dto.getScoreValue());
+        assertEquals(new BigDecimal("75.50"), dto.getScoreObtained());
     }
 
     @Test
@@ -41,7 +41,7 @@ class CriterionScoreInputDTOTest {
     }
 
     @Test
-    void testNullScoreValue() {
+    void testNullScoreObtained() {
         CriterionScoreInputDTO dto = new CriterionScoreInputDTO(1, null);
         Set<ConstraintViolation<CriterionScoreInputDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
@@ -53,7 +53,7 @@ class CriterionScoreInputDTOTest {
     }
 
     @Test
-    void testNegativeScoreValue() {
+    void testNegativeScoreObtained() {
         CriterionScoreInputDTO dto = new CriterionScoreInputDTO(1, new BigDecimal("-1.0"));
         Set<ConstraintViolation<CriterionScoreInputDTO>> violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
@@ -68,9 +68,9 @@ class CriterionScoreInputDTOTest {
     void testSettersAndGetters() {
         CriterionScoreInputDTO dto = new CriterionScoreInputDTO();
         dto.setEvaluationCriterionId(5);
-        dto.setScoreValue(new BigDecimal("88.88"));
+        dto.setScoreObtained(new BigDecimal("88.88"));
 
         assertEquals(5, dto.getEvaluationCriterionId());
-        assertEquals(new BigDecimal("88.88"), dto.getScoreValue());
+        assertEquals(new BigDecimal("88.88"), dto.getScoreObtained());
     }
 }

@@ -35,7 +35,7 @@ class CriterionScoreServiceTest {
         // Given
         int stageEvaluationId = 1;
         int criterionId = 101;
-        BigDecimal scoreValue = new BigDecimal("8.5");
+        BigDecimal scoreObtained = new BigDecimal("8.5");
 
         ProcessStage stage = new ProcessStage();
         stage.setId(1);
@@ -49,7 +49,7 @@ class CriterionScoreServiceTest {
         evaluation.setId(stageEvaluationId);
         evaluation.setProcessStage(stage);
 
-        CriterionScoreInputDTO scoreDTO = new CriterionScoreInputDTO(criterionId, scoreValue);
+        CriterionScoreInputDTO scoreDTO = new CriterionScoreInputDTO(criterionId, scoreObtained);
         SaveCriterionScoresRequest request = new SaveCriterionScoresRequest(List.of(scoreDTO));
 
         when(stageEvaluationRepository.findById(stageEvaluationId)).thenReturn(Optional.of(evaluation));
