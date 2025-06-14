@@ -6,6 +6,7 @@ import ifpb.edu.br.avaliappgti.service.CriterionScoreService;
 import ifpb.edu.br.avaliappgti.dto.CriterionScoreResponseDTO;
 import ifpb.edu.br.avaliappgti.dto.SaveCriterionScoresRequest;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationResponseDTO;
+import ifpb.edu.br.avaliappgti.dto.UpdateCriterionScoreDTO;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -115,4 +116,24 @@ public class CriterionScoreController {
     //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     //     }
     // }
+
+    /**
+     * Updates an existing criterion score by its ID.
+     * This will also trigger a recalculation of the total score for the stage evaluation.
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<StageEvaluationResponseDTO> updateCriterionScore(
+            @PathVariable Integer id,
+            @Valid @RequestBody UpdateCriterionScoreDTO updateDTO) {
+        try {
+            StageEvaluationResponseDTO updatedEvaluation = criterionScoreService.updateCriterionScore(id, updateDTO);
+            return ResponseEntity.ok(updatedEvaluation);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            System.err.println("Error updating criterion score: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

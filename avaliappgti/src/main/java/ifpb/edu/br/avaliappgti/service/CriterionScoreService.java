@@ -8,6 +8,7 @@ import ifpb.edu.br.avaliappgti.repository.CriterionScoreRepository;
 import ifpb.edu.br.avaliappgti.repository.StageEvaluationRepository;
 import ifpb.edu.br.avaliappgti.repository.EvaluationCriterionRepository;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationResponseDTO;
+import ifpb.edu.br.avaliappgti.dto.UpdateCriterionScoreDTO;
 import ifpb.edu.br.avaliappgti.dto.CriterionScoreInputDTO;
 import ifpb.edu.br.avaliappgti.dto.SaveCriterionScoresRequest;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationResponseDTO; // For output
@@ -214,5 +215,37 @@ public class CriterionScoreService {
         return scores.stream()
                 .map(CriterionScoreResponseDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public StageEvaluationResponseDTO updateCriterionScore(Integer criterionScoreId, UpdateCriterionScoreDTO updateDTO) {
+        // 1. Find the specific score to update
+        CriterionScore criterionScore = criterionScoreRepository.findById(criterionScoreId)
+                .orElseThrow(() -> new NoSuchElementException("CriterionScore not found with ID: " + criterionScoreId));
+
+        // 2. Update the score value
+        criterionScore.setScoreObtained(updateDTO.getScoreValue());
+        criterionScoreRepository.save(criterionScore);
+
+        // 3. Recalculate the total score for the entire stage
+        StageEvaluation stageEvaluation = criterionScore.getStageEvaluation();
+        ProcessStage processStage = stageEvaluation.getProcessStage();
+
+        // Fetch all leaf scores for this stage evaluation to ensure correct aggregation
+        List<CriterionScore> allLeafScores = criterionScoreRepository.findByStageEvaluation(stageEvaluation);
+        BigDecimal totalStageScore = calculateAggregatedScoresAndTotal(stageEvaluation, allLeafScores);
+
+        // 4. Update the StageEvaluation's total score and elimination status
+        stageEvaluation.setTotalStageScore(totalStageScore);
+        if (processStage.getMinimumPassingScore() != null && totalStageScore.compareTo(processStage.getMinimumPassingScore()) < 0) {
+            stageEvaluation.setIsEliminatedInStage(true);
+        } else {
+            stageEvaluation.setIsEliminatedInStage(false);
+        }
+
+        StageEvaluation updatedStageEvaluation = stageEvaluationRepository.save(stageEvaluation);
+
+        // 5. Return the updated parent evaluation
+        return new StageEvaluationResponseDTO(updatedStageEvaluation);
     }
 }
