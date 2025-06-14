@@ -17,4 +17,8 @@ public interface CriterionScoreRepository extends JpaRepository<CriterionScore, 
 
     // Find a specific criterion score for a given stage evaluation and evaluation criterion
     Optional<CriterionScore> findByStageEvaluationAndEvaluationCriterion(StageEvaluation stageEvaluation, EvaluationCriterion evaluationCriterion);
+
+    void deleteByEvaluationCriterion(EvaluationCriterion evaluationCriterion);
+    // You might also need to find by EvaluationCriterion, if not already there
+    List<CriterionScore> findByEvaluationCriterion(EvaluationCriterion evaluationCriterion);
 }

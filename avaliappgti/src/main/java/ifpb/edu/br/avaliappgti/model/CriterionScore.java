@@ -23,7 +23,7 @@ public class CriterionScore {
     @JoinColumn(name = "id_stage_evaluation", nullable = false)
     private StageEvaluation stageEvaluation;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_criterion", nullable = false)
     private EvaluationCriterion evaluationCriterion;
 
