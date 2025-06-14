@@ -19,7 +19,6 @@ public class CreateTopLevelCriterionRequestDTO {
     @NotNull(message = "Process Stage ID is required for a top-level criterion")
     private Integer processStageId;
 
-    private String note; // Optional note for the criterion
 
     // Getters and Setters
     public String getDescription() { return description; }
@@ -30,6 +29,4 @@ public class CreateTopLevelCriterionRequestDTO {
     public void setWeight(BigDecimal weight) { this.weight = weight; }
     public Integer getProcessStageId() { return processStageId; }
     public void setProcessStageId(Integer processStageId) { this.processStageId = processStageId; }
-    public String getNote() { return note; }
-    public void setNote(String note) { this.note = note; }
 }

@@ -41,9 +41,6 @@ public class EvaluationCriterion {
     @OrderBy("id ASC") // Or by a specific order field
     private List<EvaluationCriterion> children;
 
-    @Column(name = "note", columnDefinition = "TEXT")
-    private String note;
-
     // Helper to determine if it's a leaf node (can receive a score directly)
     @Transient // Not mapped to a database column
     public boolean isLeaf() {
@@ -58,13 +55,12 @@ public class EvaluationCriterion {
 
 
     // Constructors
-    public EvaluationCriterion(ProcessStage processStage, String criterionDescription, BigDecimal maximumScore, BigDecimal weight, EvaluationCriterion parent, String note) {
+    public EvaluationCriterion(ProcessStage processStage, String criterionDescription, BigDecimal maximumScore, BigDecimal weight, EvaluationCriterion parent) {
         this.processStage = processStage;
         this.criterionDescription = criterionDescription;
         this.maximumScore = maximumScore;
         this.weight = weight;
         this.parent = parent;
-        this.note = note;
     }
 
 }

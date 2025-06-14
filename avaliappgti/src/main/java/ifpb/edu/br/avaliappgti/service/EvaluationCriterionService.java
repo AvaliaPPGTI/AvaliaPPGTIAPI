@@ -67,10 +67,10 @@ public class EvaluationCriterionService {
     }
 
     @Transactional
-    public EvaluationCriterion createTopLevelCriterion(Integer processStageId, String description, BigDecimal maxScore, BigDecimal weight, String note) {
+    public EvaluationCriterion createTopLevelCriterion(Integer processStageId, String description, BigDecimal maxScore, BigDecimal weight) {
         ProcessStage processStage = processStageRepository.findById(processStageId)
                 .orElseThrow(() -> new NoSuchElementException("Process Stage not found with ID: " + processStageId));
-        EvaluationCriterion criterion = new EvaluationCriterion(processStage, description, maxScore, weight,null, note);
+        EvaluationCriterion criterion = new EvaluationCriterion(processStage, description, maxScore, weight,null);
         return evaluationCriterionRepository.save(criterion);
     }
 
@@ -85,13 +85,13 @@ public class EvaluationCriterionService {
 
 
     @Transactional
-    public EvaluationCriterion createSubCriterion(String description, BigDecimal maxScore, BigDecimal weight, Integer parentId, String note) {
+    public EvaluationCriterion createSubCriterion(String description, BigDecimal maxScore, BigDecimal weight, Integer parentId) {
         EvaluationCriterion parentCriterion = evaluationCriterionRepository.findById(parentId)
                 .orElseThrow(() -> new NoSuchElementException("Parent Evaluation Criterion not found with ID: " + parentId));
         
         // Sub-criteria inherit process stage from their top-level parent (or direct parent)
         // You might want to explicitly set the processStage here too, based on parent's top-level
-        // EvaluationCriterion criterion = new EvaluationCriterion(parentCriterion.getProcessStage(), description, maxScore, weight, parentCriterion, note);
+        // EvaluationCriterion criterion = new EvaluationCriterion(parentCriterion.getProcessStage(), description, maxScore, weight, parentCriterion);
         // return evaluationCriterionRepository.save(criterion);
 
         // Sub-criteria should ideally inherit the process stage from their top-level parent.
@@ -101,7 +101,7 @@ public class EvaluationCriterionService {
             throw new IllegalStateException("Parent criterion (ID: " + parentId + ") does not belong to a top-level criterion with an associated Process Stage.");
         }
 
-        EvaluationCriterion criterion = new EvaluationCriterion(topLevelParent.getProcessStage(), description, maxScore, weight, parentCriterion, note);
+        EvaluationCriterion criterion = new EvaluationCriterion(topLevelParent.getProcessStage(), description, maxScore, weight, parentCriterion);
         return evaluationCriterionRepository.save(criterion);
     }
 

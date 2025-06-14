@@ -8,7 +8,6 @@ public class CriterionScoreResponseDTO {
     private Integer id;
     private Integer stageEvaluationId;
     private Integer evaluationCriterionId;
-    private String evaluationCriterionNote; // Note of the leaf criterion
     private String evaluationCriterionDescription; // Description of the leaf criterion
     private BigDecimal evaluationCriterionMaximumScore; // Max score of the leaf criterion
     private BigDecimal scoreObtained;
@@ -22,7 +21,6 @@ public class CriterionScoreResponseDTO {
         }
         if (criterionScore.getEvaluationCriterion() != null) {
             this.evaluationCriterionId = criterionScore.getEvaluationCriterion().getId();
-            this.evaluationCriterionNote = criterionScore.getEvaluationCriterion().getNote();
             this.evaluationCriterionDescription = criterionScore.getEvaluationCriterion().getCriterionDescription();
             this.evaluationCriterionMaximumScore = criterionScore.getEvaluationCriterion().getMaximumScore();
         }
@@ -47,14 +45,6 @@ public class CriterionScoreResponseDTO {
 
     public void setEvaluationCriterionId(Integer evaluationCriterionId) {
         this.evaluationCriterionId = evaluationCriterionId;
-    }
-
-    public String getEvaluationCriterionNote() {
-        return evaluationCriterionNote;
-    }
-
-    public void setEvaluationCriterionNote(String evaluationCriterionNote) {
-        this.evaluationCriterionNote = evaluationCriterionNote;
     }
 
     public String getEvaluationCriterionDescription() {

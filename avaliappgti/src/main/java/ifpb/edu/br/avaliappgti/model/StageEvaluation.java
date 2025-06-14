@@ -46,8 +46,9 @@ public class StageEvaluation {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
     private CommitteeMember committeeMember;
 
-    @Column(name = "observations")
+    @Column(name = "observations",  columnDefinition = "TEXT")
     private String observations;
+
 
     // Constructors
     public StageEvaluation(Application application, ProcessStage processStage, BigDecimal totalStageScore, Boolean isEliminatedInStage, LocalDateTime evaluationDate, CommitteeMember committeeMember, String observations) {

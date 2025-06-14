@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 public class EvaluationCriterionResponseDTO {
     private Integer id;
-    private String note;
     private String description;
     private BigDecimal maximumScore;
     private BigDecimal weight;
@@ -26,7 +25,6 @@ public class EvaluationCriterionResponseDTO {
 
     public EvaluationCriterionResponseDTO(EvaluationCriterion entity) {
         this.id = entity.getId();
-        this.note = entity.getNote();
         this.description = entity.getCriterionDescription();
         this.maximumScore = entity.getMaximumScore();
         this.weight = entity.getWeight();
@@ -51,14 +49,6 @@ public class EvaluationCriterionResponseDTO {
 
     public Integer getId() {
         return id;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
     }
 
     public String getDescription() {

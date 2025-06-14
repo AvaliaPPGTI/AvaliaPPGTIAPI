@@ -17,8 +17,6 @@ public class CreateSubCriterionRequestDTO {
     @DecimalMin(value = "0.0", message = "Weight must be non-negative")
     private BigDecimal weight; // Required for sub-criteria to contribute to parent score
 
-    private String note;
-
     // Getters and Setters
 
     public String getDescription() { return description; }
@@ -27,6 +25,4 @@ public class CreateSubCriterionRequestDTO {
     public void setMaximumScore(BigDecimal maximumScore) { this.maximumScore = maximumScore; }
     public BigDecimal getWeight() { return weight; }
     public void setWeight(BigDecimal weight) { this.weight = weight; }
-    public String getNote() { return note; }
-    public void setNote(String note) { this.note = note;}
 }
