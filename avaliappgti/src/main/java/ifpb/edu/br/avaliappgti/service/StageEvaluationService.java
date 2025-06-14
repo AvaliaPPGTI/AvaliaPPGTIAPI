@@ -123,4 +123,10 @@ public class StageEvaluationService {
         return new StageEvaluationResponseDTO(updatedEntity);
     }
 
+    @Transactional(readOnly = true)
+    public Optional<StageEvaluationResponseDTO> findStageEvaluationByDetails(Integer applicationId, Integer processStageId, Integer committeeMemberId) {
+        return stageEvaluationRepository.findByApplicationIdAndProcessStageIdAndCommitteeMemberId(applicationId, processStageId, committeeMemberId)
+                .map(StageEvaluationResponseDTO::new);
+    }
+
 }

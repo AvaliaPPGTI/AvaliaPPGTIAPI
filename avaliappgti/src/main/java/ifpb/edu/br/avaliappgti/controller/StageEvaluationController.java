@@ -64,5 +64,15 @@ public class StageEvaluationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @GetMapping("/find")
+    public ResponseEntity<StageEvaluationResponseDTO> findStageEvaluationByDetails(
+            @RequestParam Integer applicationId,
+            @RequestParam Integer processStageId,
+            @RequestParam Integer committeeMemberId) {
+        return stageEvaluationService.findStageEvaluationByDetails(applicationId, processStageId, committeeMemberId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
     // add other CRUD operations for StageEvaluation here PUT for updates, DELETE for deletion, GET for listing
 }

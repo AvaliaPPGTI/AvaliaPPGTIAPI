@@ -38,4 +38,8 @@ public interface StageEvaluationRepository extends JpaRepository<StageEvaluation
     @EntityGraph(attributePaths = {"application", "application.candidate", "application.selectionProcess", "processStage", "committeeMember"})
     Optional<StageEvaluation> findById(Integer id);
 
+
+    // Add this new method:
+    Optional<StageEvaluation> findByApplicationIdAndProcessStageIdAndCommitteeMemberId(Integer applicationId, Integer processStageId, Integer committeeMemberId);
+
 }
