@@ -70,7 +70,7 @@ public class RankingService {
 
         // Check elimination rules
         if ((preProject == null || preProject.getIsEliminatedInStage()) || (interview == null || interview.getIsEliminatedInStage())) {
-            app.setApplicationStatus("Disqualified");
+            app.setApplicationStatus("Desclassificado");
             app.setFinalScore(null);
             app.setRankingByTopic(null);
             app.setIsApproved(false);
@@ -159,5 +159,20 @@ public class RankingService {
                 .findFirst()
                 .map(StageEvaluation::getTotalStageScore)
                 .orElse(BigDecimal.ZERO);
+    }
+
+    @Transactional
+    public List<RankedApplicationDTO> getRankingForProcess(Integer processId) {
+        // 1. Fetch Process and Applications
+        SelectionProcess process = selectionProcessRepository.findById(processId)
+                .orElseThrow(() -> new NoSuchElementException("Selection Process not found with ID: " + processId));
+        List<Application> applications = applicationRepository.findBySelectionProcess(process);
+
+        // 2. Return the results as DTOs, sorted by topic and rank
+        return applications.stream()
+                .sorted(Comparator.comparing((Application app) -> app.getResearchTopic() != null ? app.getResearchTopic().getName() : "")
+                                  .thenComparing(Application::getRankingByTopic, Comparator.nullsLast(Comparator.naturalOrder())))
+                .map(RankedApplicationDTO::new)
+                .collect(Collectors.toList());
     }
 }
