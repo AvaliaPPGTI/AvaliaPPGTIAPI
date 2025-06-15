@@ -8,10 +8,14 @@ import ifpb.edu.br.avaliappgti.model.StageEvaluation;
 import ifpb.edu.br.avaliappgti.model.Application;
 import ifpb.edu.br.avaliappgti.model.ProcessStage;
 import ifpb.edu.br.avaliappgti.model.CommitteeMember;
+import ifpb.edu.br.avaliappgti.model.CriterionScore;
+import ifpb.edu.br.avaliappgti.model.EvaluationCriterion;
 import ifpb.edu.br.avaliappgti.repository.StageEvaluationRepository;
 import ifpb.edu.br.avaliappgti.repository.ApplicationRepository;
 import ifpb.edu.br.avaliappgti.repository.ProcessStageRepository;
 import ifpb.edu.br.avaliappgti.repository.CommitteeMemberRepository;
+import ifpb.edu.br.avaliappgti.repository.CriterionScoreRepository;
+import ifpb.edu.br.avaliappgti.repository.EvaluationCriterionRepository;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationCreateDTO;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationResponseDTO;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationUpdateTotalScoreDTO;
@@ -19,7 +23,8 @@ import ifpb.edu.br.avaliappgti.dto.StageEvaluationUpdateTotalScoreDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime; 
-
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -30,15 +35,21 @@ public class StageEvaluationService {
     private final ApplicationRepository applicationRepository;
     private final ProcessStageRepository processStageRepository;
     private final CommitteeMemberRepository committeeMemberRepository;
+    private final CriterionScoreRepository criterionScoreRepository;
+    private final EvaluationCriterionRepository evaluationCriterionRepository;
 
     public StageEvaluationService(StageEvaluationRepository stageEvaluationRepository,
                                   ApplicationRepository applicationRepository,
                                   ProcessStageRepository processStageRepository,
-                                  CommitteeMemberRepository committeeMemberRepository) {
+                                  CommitteeMemberRepository committeeMemberRepository
+                                  CriterionScoreRepository criterionScoreRepository,
+                                  EvaluationCriterionRepository evaluationCriterionRepository) {
         this.stageEvaluationRepository = stageEvaluationRepository;
         this.applicationRepository = applicationRepository;
         this.processStageRepository = processStageRepository;
         this.committeeMemberRepository = committeeMemberRepository;
+        this.criterionScoreRepository = criterionScoreRepository;
+        this.evaluationCriterionRepository = evaluationCriterionRepository;
     }
 
 
@@ -127,6 +138,75 @@ public class StageEvaluationService {
     public Optional<StageEvaluationResponseDTO> findStageEvaluationByDetails(Integer applicationId, Integer processStageId, Integer committeeMemberId) {
         return stageEvaluationRepository.findByApplicationIdAndProcessStageIdAndCommitteeMemberId(applicationId, processStageId, committeeMemberId)
                 .map(StageEvaluationResponseDTO::new);
+    }
+
+       @Transactional
+    public StageEvaluationResponseDTO calculateAndSaveTotalScore(Integer stageEvaluationId) {
+        StageEvaluation stageEvaluation = stageEvaluationRepository.findById(stageEvaluationId)
+                .orElseThrow(() -> new NoSuchElementException("Stage Evaluation not found with ID: " + stageEvaluationId));
+
+        ProcessStage processStage = stageEvaluation.getProcessStage();
+        if (processStage == null) {
+            throw new IllegalStateException("StageEvaluation with ID " + stageEvaluationId + " is not linked to a ProcessStage.");
+        }
+
+        // --- Aggregation Logic ---
+        BigDecimal totalStageScore = calculateAggregatedScoresAndTotal(stageEvaluation);
+
+        // Update StageEvaluation's final score and elimination status
+        stageEvaluation.setTotalStageScore(totalStageScore);
+        if (processStage.getMinimumPassingScore() != null && totalStageScore.compareTo(processStage.getMinimumPassingScore()) < 0) {
+            stageEvaluation.setIsEliminatedInStage(true);
+        } else {
+            stageEvaluation.setIsEliminatedInStage(false);
+        }
+
+        StageEvaluation updatedStageEvaluation = stageEvaluationRepository.save(stageEvaluation);
+        return new StageEvaluationResponseDTO(updatedStageEvaluation);
+    }
+
+    // Helper method to orchestrate score calculation for the entire stage
+    private BigDecimal calculateAggregatedScoresAndTotal(StageEvaluation stageEvaluation) {
+        BigDecimal totalScoreForStage = BigDecimal.ZERO;
+
+        List<EvaluationCriterion> topLevelCriteria = evaluationCriterionRepository.findByProcessStageAndParentIsNull(stageEvaluation.getProcessStage());
+        if (topLevelCriteria.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+
+        for (EvaluationCriterion topLevelCriterion : topLevelCriteria) {
+            BigDecimal aggregatedCriterionScore = calculateScoreForCriterionAndChildren(topLevelCriterion, stageEvaluation);
+            // Apply weight if the top-level criterion has one
+            if (topLevelCriterion.getWeight() != null) {
+                totalScoreForStage = totalScoreForStage.add(aggregatedCriterionScore.multiply(topLevelCriterion.getWeight()));
+            } else {
+                totalScoreForStage = totalScoreForStage.add(aggregatedCriterionScore);
+            }
+        }
+        return totalScoreForStage;
+    }
+
+    // Recursive function to calculate score for a criterion and its children
+    private BigDecimal calculateScoreForCriterionAndChildren(EvaluationCriterion currentCriterion, StageEvaluation stageEvaluation) {
+        if (currentCriterion.isLeaf()) {
+            // If it's a leaf, find its actual score from CriterionScore
+            return criterionScoreRepository.findByStageEvaluationAndEvaluationCriterion(stageEvaluation, currentCriterion)
+                    .map(CriterionScore::getScoreObtained)
+                    .orElse(BigDecimal.ZERO); // Return 0 if no score found for this leaf
+        } else {
+            // If it's a parent, aggregate scores from its children
+            BigDecimal aggregatedScore = BigDecimal.ZERO;
+            for (EvaluationCriterion child : currentCriterion.getChildren()) {
+                BigDecimal childScore = calculateScoreForCriterionAndChildren(child, stageEvaluation);
+                // Apply child's weight if it exists
+                if (child.getWeight() != null) {
+                    aggregatedScore = aggregatedScore.add(childScore.multiply(child.getWeight()));
+                } else {
+                    aggregatedScore = aggregatedScore.add(childScore);
+                }
+            }
+            return aggregatedScore;
+        }
     }
 
 }

@@ -75,4 +75,24 @@ public class StageEvaluationController {
                 .orElse(ResponseEntity.notFound().build());
     }
     // add other CRUD operations for StageEvaluation here PUT for updates, DELETE for deletion, GET for listing
+
+    /**
+     * Triggers the recalculation of the total score for a given StageEvaluation.
+     * This is useful to ensure the total score is consistent with all its criterion scores.
+     */
+    @PostMapping("/{id}/calculate-total-score")
+    public ResponseEntity<StageEvaluationResponseDTO> calculateTotalScore(@PathVariable Integer id) {
+        try {
+            StageEvaluationResponseDTO updatedEvaluation = stageEvaluationService.calculateAndSaveTotalScore(id);
+            return ResponseEntity.ok(updatedEvaluation);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } catch (Exception e) {
+            System.err.println("Error calculating total stage score: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
