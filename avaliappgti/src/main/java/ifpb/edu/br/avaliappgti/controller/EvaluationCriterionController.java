@@ -96,7 +96,7 @@ public class EvaluationCriterionController {
                 requestDTO.getProcessStageId(),
                 requestDTO.getDescription(),
                 requestDTO.getMaximumScore(),
-                requestDTO.getWeight(), // Can be null for top-level if not used
+                requestDTO.getWeight() // Can be null for top-level if not used
             );
             return new ResponseEntity<>(new EvaluationCriterionResponseDTO(newCriterion), HttpStatus.CREATED);
         } catch (NoSuchElementException e) {
@@ -120,7 +120,7 @@ public class EvaluationCriterionController {
                     requestDTO.getDescription(),
                     requestDTO.getMaximumScore(),
                     requestDTO.getWeight(), // Weight is usually required for sub-criteria
-                    parentId,
+                    parentId
             );
             return new ResponseEntity<>(new EvaluationCriterionResponseDTO(newCriterion), HttpStatus.CREATED);
         } catch (NoSuchElementException e) {

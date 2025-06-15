@@ -41,7 +41,7 @@ public class StageEvaluationService {
     public StageEvaluationService(StageEvaluationRepository stageEvaluationRepository,
                                   ApplicationRepository applicationRepository,
                                   ProcessStageRepository processStageRepository,
-                                  CommitteeMemberRepository committeeMemberRepository
+                                  CommitteeMemberRepository committeeMemberRepository,
                                   CriterionScoreRepository criterionScoreRepository,
                                   EvaluationCriterionRepository evaluationCriterionRepository) {
         this.stageEvaluationRepository = stageEvaluationRepository;

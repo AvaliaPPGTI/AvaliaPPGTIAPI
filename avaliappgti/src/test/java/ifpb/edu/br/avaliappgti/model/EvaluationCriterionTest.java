@@ -21,7 +21,8 @@ class EvaluationCriterionTest {
                 stage,
                 "Clareza na comunicação",
                 maxScore,
-                weight
+                weight,
+                null
         );
 
         assertEquals(stage, criterion.getProcessStage());
