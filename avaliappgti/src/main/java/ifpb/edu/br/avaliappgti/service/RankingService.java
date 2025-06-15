@@ -1,8 +1,10 @@
 package ifpb.edu.br.avaliappgti.service;
 
 import ifpb.edu.br.avaliappgti.dto.RankedApplicationDTO;
+import ifpb.edu.br.avaliappgti.dto.StageRankingDTO;
 import ifpb.edu.br.avaliappgti.model.*;
 import ifpb.edu.br.avaliappgti.repository.ApplicationRepository;
+import ifpb.edu.br.avaliappgti.repository.ProcessStageRepository;
 import ifpb.edu.br.avaliappgti.repository.SelectionProcessRepository;
 import ifpb.edu.br.avaliappgti.repository.StageEvaluationRepository;
 import org.springframework.stereotype.Service;
@@ -21,13 +23,16 @@ public class RankingService {
     private final ApplicationRepository applicationRepository;
     private final SelectionProcessRepository selectionProcessRepository;
     private final StageEvaluationRepository stageEvaluationRepository;
+    private final ProcessStageRepository processStageRepository; 
 
     public RankingService(ApplicationRepository applicationRepository,
                           SelectionProcessRepository selectionProcessRepository,
-                          StageEvaluationRepository stageEvaluationRepository) {
+                          StageEvaluationRepository stageEvaluationRepository,
+                          ProcessStageRepository processStageRepository) {
         this.applicationRepository = applicationRepository;
         this.selectionProcessRepository = selectionProcessRepository;
         this.stageEvaluationRepository = stageEvaluationRepository;
+        this.processStageRepository = processStageRepository;
     }
 
     @Transactional
@@ -173,6 +178,30 @@ public class RankingService {
                 .sorted(Comparator.comparing((Application app) -> app.getResearchTopic() != null ? app.getResearchTopic().getName() : "")
                                   .thenComparing(Application::getRankingByTopic, Comparator.nullsLast(Comparator.naturalOrder())))
                 .map(RankedApplicationDTO::new)
+                .collect(Collectors.toList());
+    }
+        /**
+     * Retrieves a ranked list of evaluations for a specific stage of a selection process.
+     */
+    @Transactional(readOnly = true)
+    public List<StageRankingDTO> getRankingForStage(Integer processId, Integer stageId) {
+        // 1. Verify that the stage belongs to the process for request validity
+        ProcessStage stage = processStageRepository.findById(stageId)
+                .orElseThrow(() -> new NoSuchElementException("Process Stage not found with ID: " + stageId));
+
+        if (!stage.getSelectionProcess().getId().equals(processId)) {
+            throw new IllegalArgumentException("Process Stage with ID " + stageId + " does not belong to Selection Process with ID " + processId);
+        }
+
+        // 2. Fetch all evaluations for this specific stage
+        List<StageEvaluation> evaluations = stageEvaluationRepository.findByProcessStage(stage);
+
+        // 3. Sort the evaluations by the total stage score in descending order
+        evaluations.sort(Comparator.comparing(StageEvaluation::getTotalStageScore, Comparator.nullsLast(Comparator.reverseOrder())));
+
+        // 4. Map the sorted list to the DTO and return
+        return evaluations.stream()
+                .map(StageRankingDTO::new)
                 .collect(Collectors.toList());
     }
 }
