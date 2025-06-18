@@ -91,4 +91,26 @@ public class RankingController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    /**
+     * Retrieves the ranking for a specific stage within a selection process, filtered by research topic.
+     */
+    @GetMapping("/process/{processId}/stage/{stageId}/topic/{researchTopicId}")
+    public ResponseEntity<List<StageRankingDTO>> getStageRankingByResearchTopic(
+            @PathVariable Integer processId,
+            @PathVariable Integer stageId,
+            @PathVariable Integer researchTopicId) {
+        try {
+            List<StageRankingDTO> ranking = rankingService.getRankingForStageByResearchTopic(processId, stageId, researchTopicId);
+            if (ranking.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(ranking);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (IllegalArgumentException e) {
+            // This catches errors if the stage or topic does not belong to the process
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 }

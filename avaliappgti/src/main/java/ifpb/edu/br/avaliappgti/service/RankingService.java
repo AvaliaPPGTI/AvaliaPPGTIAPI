@@ -23,17 +23,20 @@ public class RankingService {
     private final StageEvaluationRepository stageEvaluationRepository;
     private final ProcessStageRepository processStageRepository; 
     private final ResearchLineRepository researchLineRepository;
+    private final ResearchTopicRepository researchTopicRepository;
 
     public RankingService(ApplicationRepository applicationRepository,
                           SelectionProcessRepository selectionProcessRepository,
                           StageEvaluationRepository stageEvaluationRepository,
                           ProcessStageRepository processStageRepository,
-                          ResearchLineRepository researchLineRepository) {
+                          ResearchLineRepository researchLineRepository,
+                          ResearchTopicRepository researchTopicRepository) {
         this.applicationRepository = applicationRepository;
         this.selectionProcessRepository = selectionProcessRepository;
         this.stageEvaluationRepository = stageEvaluationRepository;
         this.processStageRepository = processStageRepository;
         this.researchLineRepository = researchLineRepository;
+        this.researchTopicRepository = researchTopicRepository;
     }
 
     @Transactional
@@ -93,7 +96,7 @@ public class RankingService {
                 .add(scorePE.multiply(process.getWeightInterviewStep()));
 
         app.setFinalScore(finalScore);
-        app.setApplicationStatus("Ranked");
+        app.setApplicationStatus("Classificado");
     }
 
     // private void rankApplicationsForTopic(ResearchTopic topic, List<Application> applications) {
@@ -242,4 +245,42 @@ public class RankingService {
                 .map(StageRankingDTO::new)
                 .collect(Collectors.toList());
     }
+
+        /**
+     * Retrieves a ranked list of evaluations for a specific stage, filtered by research topic.
+     */
+    @Transactional(readOnly = true)
+    public List<StageRankingDTO> getRankingForStageByResearchTopic(Integer processId, Integer stageId, Integer researchTopicId) {
+        // 1. Verify that the stage and topic belong to the process for request validity
+        ProcessStage stage = processStageRepository.findById(stageId)
+                .orElseThrow(() -> new NoSuchElementException("Process Stage not found with ID: " + stageId));
+        if (!stage.getSelectionProcess().getId().equals(processId)) {
+            throw new IllegalArgumentException("Process Stage with ID " + stageId + " does not belong to Selection Process with ID " + processId);
+        }
+
+        ResearchTopic topic = researchTopicRepository.findById(researchTopicId)
+                .orElseThrow(() -> new NoSuchElementException("Research Topic not found with ID: " + researchTopicId));
+        if (!topic.getResearchLine().getSelectionProcess().getId().equals(processId)) {
+            throw new IllegalArgumentException("Research Topic with ID " + researchTopicId + " does not belong to Selection Process with ID " + processId);
+        }
+
+        // 2. Fetch all evaluations for this specific stage
+        List<StageEvaluation> evaluations = stageEvaluationRepository.findByProcessStage(stage);
+
+        // 3. Filter the evaluations by the specified research topic
+        List<StageEvaluation> filteredEvaluations = evaluations.stream()
+                .filter(evaluation -> evaluation.getApplication() != null &&
+                                      evaluation.getApplication().getResearchTopic() != null &&
+                                      evaluation.getApplication().getResearchTopic().getId().equals(researchTopicId))
+                .collect(Collectors.toList());
+
+        // 4. Sort the filtered evaluations by the total stage score in descending order
+        filteredEvaluations.sort(Comparator.comparing(StageEvaluation::getTotalStageScore, Comparator.nullsLast(Comparator.reverseOrder())));
+
+        // 5. Map the sorted, filtered list to the DTO and return
+        return filteredEvaluations.stream()
+                .map(StageRankingDTO::new)
+                .collect(Collectors.toList());
+    }
+
 }
