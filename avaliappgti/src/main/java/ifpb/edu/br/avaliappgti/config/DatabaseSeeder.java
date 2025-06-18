@@ -29,7 +29,6 @@ public class DatabaseSeeder {
                                    StageEvaluationRepository stageEvaluationRepository,
                                    CriterionScoreRepository criterionScoreRepository) {
         return args -> {
-
             // Create Committee Member
             CommitteeMember newMember = new CommitteeMember(
                     "Ana Paula Souza",
@@ -511,7 +510,7 @@ public class DatabaseSeeder {
             application.setProjectTitle("Aplicações de IA na Educação");
             application.setProjectPath("/documents/projects/ia_educacao.pdf");
             application.setApplicationDate(LocalDateTime.now());
-            application.setApplicationStatus("Pending");
+            application.setApplicationStatus("Pendente");
             application.setIsApproved(false);
             application.setFinalScore(null); // can be set later
             application.setOverallRanking(null);

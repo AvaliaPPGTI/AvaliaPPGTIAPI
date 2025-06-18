@@ -53,7 +53,7 @@ public class Application {
 
     // --- New fields for evaluation and status ---
     @Column(name = "application_status", nullable = false, length = 50)
-    private String applicationStatus = "Pending";
+    private String applicationStatus = "Pendente";
 
     @Column(name = "final_score", precision = 5, scale = 2)
     private BigDecimal finalScore;
@@ -78,7 +78,7 @@ public class Application {
         this.projectTitle = projectTitle;
         this.projectPath = projectPath;
         this.applicationDate = LocalDateTime.now();
-        this.applicationStatus = "Pending";
+        this.applicationStatus = "Pendente";
         this.isApproved = false;
     }
 
