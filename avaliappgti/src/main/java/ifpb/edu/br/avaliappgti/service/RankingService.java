@@ -283,4 +283,34 @@ public class RankingService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves a ranked list of evaluations for a specific stage, filtered by application status.
+     */
+    @Transactional(readOnly = true)
+    public List<StageRankingDTO> getRankingForStageByStatus(Integer processId, Integer stageId, String status) {
+        // 1. Verify that the stage belongs to the process for request validity
+        ProcessStage stage = processStageRepository.findById(stageId)
+                .orElseThrow(() -> new NoSuchElementException("Process Stage not found with ID: " + stageId));
+        if (!stage.getSelectionProcess().getId().equals(processId)) {
+            throw new IllegalArgumentException("Process Stage with ID " + stageId + " does not belong to Selection Process with ID " + processId);
+        }
+
+        // 2. Fetch all evaluations for this specific stage
+        List<StageEvaluation> evaluations = stageEvaluationRepository.findByProcessStage(stage);
+
+        // 3. Filter the evaluations by the specified application status (case-insensitive)
+        List<StageEvaluation> filteredEvaluations = evaluations.stream()
+                .filter(evaluation -> evaluation.getApplication() != null &&
+                                      status.equalsIgnoreCase(evaluation.getApplication().getApplicationStatus()))
+                .collect(Collectors.toList());
+
+        // 4. Sort the filtered evaluations by the total stage score in descending order
+        filteredEvaluations.sort(Comparator.comparing(StageEvaluation::getTotalStageScore, Comparator.nullsLast(Comparator.reverseOrder())));
+
+        // 5. Map the sorted, filtered list to the DTO and return
+        return filteredEvaluations.stream()
+                .map(StageRankingDTO::new)
+                .collect(Collectors.toList());
+    }
+
 }

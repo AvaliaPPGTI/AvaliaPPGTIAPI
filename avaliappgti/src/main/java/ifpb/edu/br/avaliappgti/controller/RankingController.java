@@ -113,4 +113,27 @@ public class RankingController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    /**
+     * Retrieves the ranking for a specific stage within a selection process, filtered by application status.
+     * Possible statuses: "Ranked", "Disqualified", "Pending".
+     */
+    @GetMapping("/process/{processId}/stage/{stageId}/status/{status}")
+    public ResponseEntity<List<StageRankingDTO>> getStageRankingByStatus(
+            @PathVariable Integer processId,
+            @PathVariable Integer stageId,
+            @PathVariable String status) {
+        try {
+            List<StageRankingDTO> ranking = rankingService.getRankingForStageByStatus(processId, stageId, status);
+            if (ranking.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(ranking);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (IllegalArgumentException e) {
+            // This catches errors if the stage does not belong to the process
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 }
