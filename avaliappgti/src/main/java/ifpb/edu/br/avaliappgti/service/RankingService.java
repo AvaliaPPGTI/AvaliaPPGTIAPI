@@ -3,10 +3,8 @@ package ifpb.edu.br.avaliappgti.service;
 import ifpb.edu.br.avaliappgti.dto.RankedApplicationDTO;
 import ifpb.edu.br.avaliappgti.dto.StageRankingDTO;
 import ifpb.edu.br.avaliappgti.model.*;
-import ifpb.edu.br.avaliappgti.repository.ApplicationRepository;
-import ifpb.edu.br.avaliappgti.repository.ProcessStageRepository;
-import ifpb.edu.br.avaliappgti.repository.SelectionProcessRepository;
-import ifpb.edu.br.avaliappgti.repository.StageEvaluationRepository;
+import ifpb.edu.br.avaliappgti.repository.*;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,15 +22,18 @@ public class RankingService {
     private final SelectionProcessRepository selectionProcessRepository;
     private final StageEvaluationRepository stageEvaluationRepository;
     private final ProcessStageRepository processStageRepository; 
+    private final ResearchLineRepository researchLineRepository;
 
     public RankingService(ApplicationRepository applicationRepository,
                           SelectionProcessRepository selectionProcessRepository,
                           StageEvaluationRepository stageEvaluationRepository,
-                          ProcessStageRepository processStageRepository) {
+                          ProcessStageRepository processStageRepository,
+                          ResearchLineRepository researchLineRepository) {
         this.applicationRepository = applicationRepository;
         this.selectionProcessRepository = selectionProcessRepository;
         this.stageEvaluationRepository = stageEvaluationRepository;
         this.processStageRepository = processStageRepository;
+        this.researchLineRepository = researchLineRepository;
     }
 
     @Transactional
@@ -201,6 +202,43 @@ public class RankingService {
 
         // 4. Map the sorted list to the DTO and return
         return evaluations.stream()
+                .map(StageRankingDTO::new)
+                .collect(Collectors.toList());
+    }
+
+        /**
+     * Retrieves a ranked list of evaluations for a specific stage, filtered by research line.
+     */
+    @Transactional(readOnly = true)
+    public List<StageRankingDTO> getRankingForStageByResearchLine(Integer processId, Integer stageId, Integer researchLineId) {
+        // 1. Verify that the stage and research line belong to the process for request validity
+        ProcessStage stage = processStageRepository.findById(stageId)
+                .orElseThrow(() -> new NoSuchElementException("Process Stage not found with ID: " + stageId));
+        if (!stage.getSelectionProcess().getId().equals(processId)) {
+            throw new IllegalArgumentException("Process Stage with ID " + stageId + " does not belong to Selection Process with ID " + processId);
+        }
+
+        ResearchLine researchLine = researchLineRepository.findById(researchLineId)
+                .orElseThrow(() -> new NoSuchElementException("Research Line not found with ID: " + researchLineId));
+        if (!researchLine.getSelectionProcess().getId().equals(processId)) {
+            throw new IllegalArgumentException("Research Line with ID " + researchLineId + " does not belong to Selection Process with ID " + processId);
+        }
+
+        // 2. Fetch all evaluations for this specific stage
+        List<StageEvaluation> evaluations = stageEvaluationRepository.findByProcessStage(stage);
+
+        // 3. Filter the evaluations by the specified research line
+        List<StageEvaluation> filteredEvaluations = evaluations.stream()
+                .filter(evaluation -> evaluation.getApplication() != null &&
+                                      evaluation.getApplication().getResearchLine() != null &&
+                                      evaluation.getApplication().getResearchLine().getId().equals(researchLineId))
+                .collect(Collectors.toList());
+
+        // 4. Sort the filtered evaluations by the total stage score in descending order
+        filteredEvaluations.sort(Comparator.comparing(StageEvaluation::getTotalStageScore, Comparator.nullsLast(Comparator.reverseOrder())));
+
+        // 5. Map the sorted, filtered list to the DTO and return
+        return filteredEvaluations.stream()
                 .map(StageRankingDTO::new)
                 .collect(Collectors.toList());
     }
