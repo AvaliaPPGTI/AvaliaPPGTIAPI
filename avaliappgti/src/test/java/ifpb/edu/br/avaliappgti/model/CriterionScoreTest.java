@@ -1,5 +1,6 @@
-package ifpb.edu.br.avaliappgti.model;
-
+import ifpb.edu.br.avaliappgti.model.CriterionScore;
+import ifpb.edu.br.avaliappgti.model.EvaluationCriterion;
+import ifpb.edu.br.avaliappgti.model.StageEvaluation;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -9,34 +10,43 @@ import static org.junit.jupiter.api.Assertions.*;
 class CriterionScoreTest {
 
     @Test
-    void testAllArgsConstructor() {
-        StageEvaluation stageEvaluation = new StageEvaluation();
-        EvaluationCriterion evaluationCriterion = new EvaluationCriterion();
-        BigDecimal score = new BigDecimal("9.75");
+    void testNoArgsConstructor_shouldInitializeNulls() {
+        CriterionScore score = new CriterionScore();
 
-        CriterionScore criterionScore = new CriterionScore(stageEvaluation, evaluationCriterion, score);
-
-        assertEquals(stageEvaluation, criterionScore.getStageEvaluation());
-        assertEquals(evaluationCriterion, criterionScore.getEvaluationCriterion());
-        assertEquals(score, criterionScore.getScoreObtained());
+        assertNull(score.getId());
+        assertNull(score.getStageEvaluation());
+        assertNull(score.getEvaluationCriterion());
+        assertNull(score.getScoreObtained());
     }
 
     @Test
-    void testSettersAndGetters() {
-        CriterionScore criterionScore = new CriterionScore();
+    void testAllArgsConstructor_shouldSetFieldsCorrectly() {
+        StageEvaluation evaluation = new StageEvaluation();
+        EvaluationCriterion criterion = new EvaluationCriterion();
+        BigDecimal value = BigDecimal.valueOf(7.5);
 
-        StageEvaluation stageEvaluation = new StageEvaluation();
-        EvaluationCriterion evaluationCriterion = new EvaluationCriterion();
-        BigDecimal score = new BigDecimal("8.50");
+        CriterionScore score = new CriterionScore(evaluation, criterion, value);
 
-        criterionScore.setId(10);
-        criterionScore.setStageEvaluation(stageEvaluation);
-        criterionScore.setEvaluationCriterion(evaluationCriterion);
-        criterionScore.setScoreObtained(score);
+        assertEquals(evaluation, score.getStageEvaluation());
+        assertEquals(criterion, score.getEvaluationCriterion());
+        assertEquals(value, score.getScoreObtained());
+    }
 
-        assertEquals(10, criterionScore.getId());
-        assertEquals(stageEvaluation, criterionScore.getStageEvaluation());
-        assertEquals(evaluationCriterion, criterionScore.getEvaluationCriterion());
-        assertEquals(score, criterionScore.getScoreObtained());
+    @Test
+    void testSettersAndGetters_shouldWorkCorrectly() {
+        StageEvaluation evaluation = new StageEvaluation();
+        EvaluationCriterion criterion = new EvaluationCriterion();
+        BigDecimal value = BigDecimal.valueOf(9.0);
+
+        CriterionScore score = new CriterionScore();
+        score.setId(100);
+        score.setStageEvaluation(evaluation);
+        score.setEvaluationCriterion(criterion);
+        score.setScoreObtained(value);
+
+        assertEquals(100, score.getId());
+        assertEquals(evaluation, score.getStageEvaluation());
+        assertEquals(criterion, score.getEvaluationCriterion());
+        assertEquals(value, score.getScoreObtained());
     }
 }

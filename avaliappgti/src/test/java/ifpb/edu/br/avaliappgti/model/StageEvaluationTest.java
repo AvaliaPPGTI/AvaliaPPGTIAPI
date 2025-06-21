@@ -1,5 +1,4 @@
-package ifpb.edu.br.avaliappgti.model;
-
+import ifpb.edu.br.avaliappgti.model.*;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -10,61 +9,82 @@ import static org.junit.jupiter.api.Assertions.*;
 class StageEvaluationTest {
 
     @Test
-    void testAllArgsConstructor() {
-        Application application = new Application();
-        ProcessStage processStage = new ProcessStage();
-        CommitteeMember committeeMember = new CommitteeMember();
+    void testNoArgsConstructor_shouldInitializeDefaults() {
+        // Act
+        StageEvaluation evaluation = new StageEvaluation();
 
-        BigDecimal score = new BigDecimal("7.50");
-        Boolean eliminated = true;
-        LocalDateTime evaluationDate = LocalDateTime.of(2024, 10, 1, 14, 30);
-        String observations = "Bom desempenho";
+        // Assert
+        assertNull(evaluation.getId());
+        assertNull(evaluation.getApplication());
+        assertNull(evaluation.getProcessStage());
+        assertNull(evaluation.getTotalStageScore());
+        assertFalse(evaluation.getIsEliminatedInStage()); // Should default to false
+        assertNull(evaluation.getEvaluationDate());
+        assertNull(evaluation.getCommitteeMember());
+        assertNull(evaluation.getObservations());
+    }
 
+    @Test
+    void testAllArgsConstructor_shouldSetAllFieldsCorrectly() {
+        // Arrange
+        Application app = new Application();
+        ProcessStage stage = new ProcessStage();
+        CommitteeMember member = new CommitteeMember();
+        BigDecimal score = BigDecimal.valueOf(8.75);
+        LocalDateTime now = LocalDateTime.now();
+        String observations = "Strong candidate";
+
+        // Act
         StageEvaluation evaluation = new StageEvaluation(
-                application,
-                processStage,
+                app,
+                stage,
                 score,
-                eliminated,
-                evaluationDate,
-                committeeMember,
+                true,
+                now,
+                member,
                 observations
         );
 
-        assertEquals(application, evaluation.getApplication());
-        assertEquals(processStage, evaluation.getProcessStage());
+        // Assert
+        assertEquals(app, evaluation.getApplication());
+        assertEquals(stage, evaluation.getProcessStage());
         assertEquals(score, evaluation.getTotalStageScore());
-        assertEquals(eliminated, evaluation.getIsEliminatedInStage());
-        assertEquals(evaluationDate, evaluation.getEvaluationDate());
-        assertEquals(committeeMember, evaluation.getCommitteeMember());
+        assertTrue(evaluation.getIsEliminatedInStage());
+        assertEquals(now, evaluation.getEvaluationDate());
+        assertEquals(member, evaluation.getCommitteeMember());
         assertEquals(observations, evaluation.getObservations());
     }
 
     @Test
-    void testSettersAndGetters() {
+    void testSettersAndGetters_shouldWorkCorrectly() {
+        // Arrange
         StageEvaluation evaluation = new StageEvaluation();
 
-        Application application = new Application();
-        ProcessStage processStage = new ProcessStage();
-        CommitteeMember committeeMember = new CommitteeMember();
-        BigDecimal score = new BigDecimal("8.75");
-        LocalDateTime date = LocalDateTime.of(2024, 12, 5, 10, 0);
+        Application app = new Application();
+        ProcessStage stage = new ProcessStage();
+        CommitteeMember member = new CommitteeMember();
+        BigDecimal score = BigDecimal.valueOf(9.25);
+        LocalDateTime dateTime = LocalDateTime.of(2025, 6, 18, 10, 30);
+        String note = "Promissor";
 
-        evaluation.setId(42);
-        evaluation.setApplication(application);
-        evaluation.setProcessStage(processStage);
+        // Act
+        evaluation.setId(100);
+        evaluation.setApplication(app);
+        evaluation.setProcessStage(stage);
         evaluation.setTotalStageScore(score);
-        evaluation.setIsEliminatedInStage(false);
-        evaluation.setEvaluationDate(date);
-        evaluation.setCommitteeMember(committeeMember);
-        evaluation.setObservations("Observação de teste");
+        evaluation.setIsEliminatedInStage(true);
+        evaluation.setEvaluationDate(dateTime);
+        evaluation.setCommitteeMember(member);
+        evaluation.setObservations(note);
 
-        assertEquals(42, evaluation.getId());
-        assertEquals(application, evaluation.getApplication());
-        assertEquals(processStage, evaluation.getProcessStage());
+        // Assert
+        assertEquals(100, evaluation.getId());
+        assertEquals(app, evaluation.getApplication());
+        assertEquals(stage, evaluation.getProcessStage());
         assertEquals(score, evaluation.getTotalStageScore());
-        assertFalse(evaluation.getIsEliminatedInStage());
-        assertEquals(date, evaluation.getEvaluationDate());
-        assertEquals(committeeMember, evaluation.getCommitteeMember());
-        assertEquals("Observação de teste", evaluation.getObservations());
+        assertTrue(evaluation.getIsEliminatedInStage());
+        assertEquals(dateTime, evaluation.getEvaluationDate());
+        assertEquals(member, evaluation.getCommitteeMember());
+        assertEquals(note, evaluation.getObservations());
     }
 }
