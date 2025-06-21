@@ -39,6 +39,10 @@ public class StageRankingDTO {
     private Integer quotaId;
     private String quotaName;
 
+    public StageRankingDTO() {
+        // Empty constructor for frameworks and tests
+    }
+
     public StageRankingDTO(StageEvaluation stageEvaluation) {
         this.stageEvaluationId = stageEvaluation.getId();
         this.totalStageScore = stageEvaluation.getTotalStageScore();

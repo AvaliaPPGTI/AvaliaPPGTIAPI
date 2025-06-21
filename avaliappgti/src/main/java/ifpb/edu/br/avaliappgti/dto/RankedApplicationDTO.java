@@ -23,6 +23,10 @@ public class RankedApplicationDTO {
     private boolean isApproved;
     private String applicationStatus;
 
+    public RankedApplicationDTO() {
+        // Empty constructor for frameworks and tests
+    }
+
     public RankedApplicationDTO(Application application) {
         this.applicationId = application.getId();
         this.finalScore = application.getFinalScore();
