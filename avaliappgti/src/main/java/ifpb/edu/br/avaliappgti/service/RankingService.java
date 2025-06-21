@@ -137,7 +137,7 @@ public class RankingService {
             // This implementation covers the main tie-breakers.
 
         List<Application> rankedCandidates = applications.stream()
-                .filter(app -> "Ranked".equals(app.getApplicationStatus()))
+                .filter(app -> "Classificado".equals(app.getApplicationStatus()))
                 .sorted(rankingComparator)
                 .collect(Collectors.toList());
 
