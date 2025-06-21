@@ -116,7 +116,7 @@ public class RankingController {
 
     /**
      * Retrieves the ranking for a specific stage within a selection process, filtered by application status.
-     * Possible statuses: "Ranked", "Disqualified", "Pending".
+     * Possible statuses: "Classificado", "Desclassificado", "Pendente".
      */
     @GetMapping("/process/{processId}/stage/{stageId}/status/{status}")
     public ResponseEntity<List<StageRankingDTO>> getStageRankingByStatus(
