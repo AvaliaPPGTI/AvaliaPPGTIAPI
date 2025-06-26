@@ -1,4 +1,5 @@
-import ifpb.edu.br.avaliappgti.model.*;
+package ifpb.edu.br.avaliappgti.model;
+
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

@@ -1,3 +1,5 @@
+package ifpb.edu.br.avaliappgti.dto;
+
 import ifpb.edu.br.avaliappgti.dto.StageRankingDTO;
 import ifpb.edu.br.avaliappgti.model.*;
 

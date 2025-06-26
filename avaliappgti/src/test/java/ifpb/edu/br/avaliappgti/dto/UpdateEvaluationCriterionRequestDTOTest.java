@@ -1,3 +1,5 @@
+package ifpb.edu.br.avaliappgti.dto;
+
 import ifpb.edu.br.avaliappgti.dto.UpdateEvaluationCriterionRequestDTO;
 import jakarta.validation.*;
 import org.junit.jupiter.api.BeforeEach;

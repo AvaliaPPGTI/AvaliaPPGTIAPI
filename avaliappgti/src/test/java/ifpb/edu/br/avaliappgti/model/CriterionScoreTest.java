@@ -1,3 +1,5 @@
+package ifpb.edu.br.avaliappgti.model;
+
 import ifpb.edu.br.avaliappgti.model.CriterionScore;
 import ifpb.edu.br.avaliappgti.model.EvaluationCriterion;
 import ifpb.edu.br.avaliappgti.model.StageEvaluation;

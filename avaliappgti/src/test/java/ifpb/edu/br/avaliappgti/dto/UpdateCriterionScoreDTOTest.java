@@ -1,3 +1,5 @@
+package ifpb.edu.br.avaliappgti.dto;
+
 import ifpb.edu.br.avaliappgti.dto.UpdateCriterionScoreDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
