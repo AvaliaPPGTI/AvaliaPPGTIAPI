@@ -26,64 +26,6 @@ public class EvaluationCriterionController {
         this.evaluationCriterionService = evaluationCriterionService;
     }
 
-    // @GetMapping("/{id}")
-    // public ResponseEntity<EvaluationCriterion> getEvaluationCriterionById(@PathVariable Integer id) {
-    //     return evaluationCriterionService.getEvaluationCriterionById(id)
-    //             .map(ResponseEntity::ok)
-    //             .orElse(ResponseEntity.notFound().build());
-    // }
-
-    // @GetMapping("/by-process/{processId}/stage/{stageId}")
-    // public ResponseEntity<List<EvaluationCriterion>> getCriteriaByProcessStageAndSelectionProcess(
-    //         @PathVariable Integer processId,
-    //         @PathVariable Integer stageId) {
-    //     try {
-    //         List<EvaluationCriterion> criteria = evaluationCriterionService.getCriteriaByProcessStageAndSelectionProcessId(processId, stageId);
-    //         if (criteria.isEmpty()) {
-    //             return ResponseEntity.noContent().build();
-    //         }
-    //         return ResponseEntity.ok(criteria);
-    //     } catch (NoSuchElementException e) {
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    //     } catch (IllegalArgumentException e) {
-    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-    //     } catch (Exception e) {
-    //         // General error handling
-    //         System.err.println("Error fetching evaluation criteria: " + e.getMessage());
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    //     }
-    // }
-
-    // @PostMapping
-    // public ResponseEntity<EvaluationCriterion> createEvaluationCriterion(@RequestBody EvaluationCriterion evaluationCriterion) {
-    //     EvaluationCriterion savedCriterion = evaluationCriterionService.saveEvaluationCriterion(evaluationCriterion);
-    //     return ResponseEntity.status(HttpStatus.CREATED).body(savedCriterion);
-    // }
-
-
-
-    // @PutMapping("/{id}")
-    // public ResponseEntity<EvaluationCriterion> updateEvaluationCriterion(@PathVariable Integer id, @RequestBody EvaluationCriterion evaluationCriterion) {
-    //     evaluationCriterion.setId(id); // Ensure ID from path is used
-    //     if (evaluationCriterionService.getEvaluationCriterionById(id) == null) {
-    //         return ResponseEntity.notFound().build();
-    //     }
-    //     EvaluationCriterion updatedCriterion = evaluationCriterionService.saveEvaluationCriterion(evaluationCriterion);
-    //     return ResponseEntity.ok(updatedCriterion);
-    // }
-
-    // @DeleteMapping("/{id}")
-    // public ResponseEntity<Void> deleteEvaluationCriterion(@PathVariable Integer id) {
-    //     if (evaluationCriterionService.getEvaluationCriterionById(id) == null) {
-    //         return ResponseEntity.notFound().build();
-    //     }
-    //     evaluationCriterionService.deleteEvaluationCriterion(id);
-    //     return ResponseEntity.noContent().build();
-    // }
-
-
-
-
      /**
      * Creates a new top-level evaluation criterion.
      * A top-level criterion is directly associated with a ProcessStage.
@@ -217,25 +159,5 @@ public class EvaluationCriterionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-
-    /**
-     * Deletes an evaluation criterion by its ID.
-     * WARNING: This can cascade delete child criteria and will fail if CriterionScores are associated
-     * and database constraints prevent deletion.
-     */
-    // @DeleteMapping("/{id}")
-    // public ResponseEntity<Void> deleteEvaluationCriterion(@PathVariable Integer id) {
-    //     try {
-    //         evaluationCriterionService.deleteEvaluationCriterion(id);
-    //         return ResponseEntity.noContent().build(); // 204 No Content
-    //     } catch (NoSuchElementException e) {
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    //     } catch (Exception e) {
-    //         // This might catch DataIntegrityViolationException if scores prevent deletion
-    //         e.printStackTrace();
-    //         // Customize error response based on the exception type
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    //     }
-    // }
 
 }

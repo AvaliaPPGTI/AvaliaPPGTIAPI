@@ -36,11 +36,6 @@ public class EvaluationCriterionService {
         this.criterionScoreRepository = criterionScoreRepository;
     }
 
-    // @Transactional(readOnly = true)
-    // public Optional<EvaluationCriterion> getEvaluationCriterionById(Integer id) {
-    //     return evaluationCriterionRepository.findById(id);
-    // }
-
     @Transactional(readOnly = true)
     public List<EvaluationCriterion> getCriteriaByProcessStageAndSelectionProcessId(Integer processId, Integer stageId) {
         // verify the SelectionProcess exists
@@ -88,11 +83,6 @@ public class EvaluationCriterionService {
     public EvaluationCriterion createSubCriterion(String description, BigDecimal maxScore, BigDecimal weight, Integer parentId) {
         EvaluationCriterion parentCriterion = evaluationCriterionRepository.findById(parentId)
                 .orElseThrow(() -> new NoSuchElementException("Parent Evaluation Criterion not found with ID: " + parentId));
-        
-        // Sub-criteria inherit process stage from their top-level parent (or direct parent)
-        // You might want to explicitly set the processStage here too, based on parent's top-level
-        // EvaluationCriterion criterion = new EvaluationCriterion(parentCriterion.getProcessStage(), description, maxScore, weight, parentCriterion);
-        // return evaluationCriterionRepository.save(criterion);
 
         // Sub-criteria should ideally inherit the process stage from their top-level parent.
         // Traverse up to find the actual ProcessStage.
@@ -112,9 +102,7 @@ public class EvaluationCriterionService {
         // Ensure that findByProcessStageAndParentIsNull has @EntityGraph for 'children' to load the tree
         return evaluationCriterionRepository.findByProcessStageAndParentIsNull(processStage);
     }
-    // A custom query in the repository for the above:
-    // In EvaluationCriterionRepository:
-    // List<EvaluationCriterion> findByProcessStageAndParentIsNull(ProcessStage processStage);
+
    /**
      * Retrieves a single evaluation criterion by its ID, eagerly fetching its children.
      * This is useful for displaying details of a specific criterion or a sub-tree.
@@ -169,12 +157,6 @@ public class EvaluationCriterionService {
         EvaluationCriterion criterionToDelete = evaluationCriterionRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Evaluation Criterion not found with ID: " + id));
 
-        // OPTIONAL: Explicitly delete associated criterion scores first if DB cascade is not set
-        // If criterionToDelete.isLeaf() is true, this is especially relevant.
-        // If criterionToDelete is a parent, its children (and their scores) will be deleted via cascade IF
-        // you have orphanRemoval=true on the @OneToMany 'children' list and ON DELETE CASCADE on scores.
-        // If your database has ON DELETE RESTRICT for criterion_scores, this will fail if scores exist.
-        // A safer approach for JPA without DB cascade is:
         criterionScoreRepository.deleteByEvaluationCriterion(criterionToDelete); // Add this method to CriterionScoreRepository
 
         evaluationCriterionRepository.delete(criterionToDelete);

@@ -26,33 +26,6 @@ public class CriterionScoreController {
         this.criterionScoreService = criterionScoreService;
     }
 
-
-    // @PostMapping("/evaluate/{stageEvaluationId}")
-    // public ResponseEntity<StageEvaluationResponseDTO> evaluateStage( // CHANGE RETURN TYPE HERE
-    //                                                                  @PathVariable Integer stageEvaluationId,
-    //                                                                  @Valid @RequestBody SaveCriterionScoresRequest request) {
-    //     try {
-    //         StageEvaluationResponseDTO updatedStageEvaluationDto = criterionScoreService.saveCriteriaScoresForStageEvaluation(stageEvaluationId, request); // Service now returns DTO
-    //         return ResponseEntity.ok(updatedStageEvaluationDto);
-    //     } catch (NoSuchElementException e) {
-    //         System.err.println("Not Found Error: " + e.getMessage()); // Log specific error message
-    //         e.printStackTrace();
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    //     } catch (IllegalArgumentException e) {
-    //         System.err.println("Bad Request Error: " + e.getMessage()); // Log specific error message
-    //         e.printStackTrace();
-    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    //     } catch (IllegalStateException e) {
-    //         System.err.println("Conflict Error: " + e.getMessage()); // Log specific error message
-    //         e.printStackTrace();
-    //         return ResponseEntity.status(HttpStatus.CONFLICT).build();
-    //     } catch (Exception e) {
-    //         System.err.println("Error saving criterion scores: " + e.getMessage());
-    //         e.printStackTrace(); // Always print stack trace for debugging
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    //     }
-    // }
-
     @GetMapping("/by-stage-evaluation/{stageEvaluationId}")
     public ResponseEntity<List<CriterionScoreResponseDTO>> getScoresByStageEvaluation(
             @PathVariable Integer stageEvaluationId) {
@@ -100,22 +73,6 @@ public class CriterionScoreController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-    // Other methods here for retrieving specific criterion scores,
-    // though often the aggregated view via StageEvaluationController is more common.
-    // Example:
-    // @GetMapping("/by-stage-evaluation/{stageEvaluationId}")
-    // public ResponseEntity<List<CriterionScoreResponseDTO>> getScoresByStageEvaluation(@PathVariable Integer stageEvaluationId) {
-    //     try {
-    //         List<CriterionScoreResponseDTO> scores = criterionScoreService.getScoresByStageEvaluation(stageEvaluationId);
-    //         return ResponseEntity.ok(scores);
-    //     } catch (NoSuchElementException e) {
-    //         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    //     }
-    // }
 
     /**
      * Updates an existing criterion score by its ID.

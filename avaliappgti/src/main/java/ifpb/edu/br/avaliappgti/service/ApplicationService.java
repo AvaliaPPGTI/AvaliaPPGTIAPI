@@ -70,30 +70,6 @@ public class ApplicationService {
         return uniqueCandidates.stream().collect(Collectors.toList());
     }
 
-    // @Transactional(readOnly = true)
-    // public List<Candidate> getHomologatedCandidatesBySelectionProcessId(Integer processId) {
-    //     SelectionProcess selectionProcess = selectionProcessRepository.findById(processId)
-    //         .orElseThrow(() -> new NoSuchElementException("Selection Process not found with ID: " + processId));
-
-    //     List<Application> applicationsInProcess = applicationRepository.findBySelectionProcess(selectionProcess);
-
-    //     Set<Candidate> homologatedCandidates = new HashSet<>();
-    //     for (Application app : applicationsInProcess) {
-    //         // Fetch verification for each application (N+1 query issue if not careful with fetch types)
-    //         // Or ideally, create a custom query in ApplicationVerificationRepository with joins
-    //         // e.g., @Query("SELECT av FROM ApplicationVerification av JOIN FETCH av.application a JOIN FETCH a.candidate c WHERE av.finalStatus = 1 AND a.selectionProcess = :selectionProcess")
-    //         // List<ApplicationVerification> verifications = applicationVerificationRepository.findByApplicationInAndFinalStatus(applicationsInProcess, 1);
-    //         // For now, assuming default EAGER fetch or that ApplicationVerification is fetched on demand
-    //         ApplicationVerification verification = applicationVerificationRepository.findByApplication(app).orElse(null);
-    //         if (verification != null && verification.getFinalStatus() != null && verification.getFinalStatus() == 1) {
-    //             if (app.getCandidate() != null) {
-    //                 homologatedCandidates.add(app.getCandidate());
-    //             }
-    //         }
-    //     }
-    //     return homologatedCandidates.stream().collect(Collectors.toList());
-    // }
-
     @Transactional(readOnly = true)
     public List<Candidate> getHomologatedCandidatesBySelectionProcessId(Integer processId) {
         SelectionProcess selectionProcess = selectionProcessRepository.findById(processId)

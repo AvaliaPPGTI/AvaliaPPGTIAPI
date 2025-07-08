@@ -82,7 +82,7 @@ public class RankingService {
             app.setApplicationStatus("Desclassificado");
             app.setFinalScore(null);
             app.setRankingByTopic(null);
-            app.setIsApproved(false);
+            app.setIsApproved(false);       
             return;
         }
 
@@ -99,29 +99,6 @@ public class RankingService {
         app.setApplicationStatus("Classificado");
     }
 
-    // private void rankApplicationsForTopic(ResearchTopic topic, List<Application> applications) {
-    //     // Filter out disqualified candidates before ranking
-    //     List<Application> rankedCandidates = applications.stream()
-    //             .filter(app -> "Ranked".equals(app.getApplicationStatus()))
-    //             .sorted(Comparator.comparing(Application::getFinalScore, Comparator.nullsLast(Comparator.reverseOrder())))
-    //             .collect(Collectors.toList());
-
-    //     // Note: Tie-breaking and quota logic would be implemented here.
-    //     // For now, this provides a basic ranking by score.
-
-    //     int rank = 1;
-    //     for (Application app : rankedCandidates) {
-    //         app.setRankingByTopic(rank);
-    //         // Approve candidates if their rank is within the number of vacancies
-    //         app.setIsApproved(rank <= topic.getVacancies());
-    //         rank++;
-    //     }
-
-    //     // Mark remaining (non-ranked) candidates as not approved
-    //     applications.stream()
-    //             .filter(app -> app.getRankingByTopic() == null)
-    //             .forEach(app -> app.setIsApproved(false));
-    // }
     private void rankApplicationsForTopic(ResearchTopic topic, List<Application> applications) {
         
         // This comparator implements the tie-breaking rules from section 3.14

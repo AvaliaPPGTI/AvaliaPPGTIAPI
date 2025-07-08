@@ -49,46 +49,6 @@ public class CriterionScoreService {
             throw new IllegalStateException("StageEvaluation with ID " + stageEvaluationId + " is not linked to a ProcessStage.");
         }
 
-    //     BigDecimal totalScore = BigDecimal.ZERO;
-
-    //     for (CriterionScoreInputDTO scoreDto : request.getScores()) {
-    //         EvaluationCriterion evaluationCriterion = evaluationCriterionRepository.findById(scoreDto.getEvaluationCriterionId())
-    //                 .orElseThrow(() -> new NoSuchElementException("Evaluation Criterion not found with ID: " + scoreDto.getEvaluationCriterionId()));
-
-    //         if (!evaluationCriterion.getProcessStage().getId().equals(processStage.getId())) {
-    //             throw new IllegalArgumentException("Evaluation Criterion ID " + scoreDto.getEvaluationCriterionId() +
-    //                     " does not belong to Process Stage ID " + processStage.getId() +
-    //                     " (from Stage Evaluation ID " + stageEvaluationId + ").");
-    //         }
-
-    //         Optional<CriterionScore> existingScore = criterionScoreRepository.findByStageEvaluationAndEvaluationCriterion(stageEvaluation, evaluationCriterion);
-    //         if (existingScore.isPresent()) {
-    //             CriterionScore scoreToUpdate = existingScore.get();
-    //             scoreToUpdate.setScoreObtained(scoreDto.getScoreObtained());
-    //             criterionScoreRepository.save(scoreToUpdate);
-    //         } else {
-    //             CriterionScore newScore = new CriterionScore();
-    //             newScore.setStageEvaluation(stageEvaluation);
-    //             newScore.setEvaluationCriterion(evaluationCriterion);
-    //             newScore.setScoreObtained(scoreDto.getScoreObtained());
-    //             criterionScoreRepository.save(newScore);
-    //         }
-    //         totalScore = totalScore.add(scoreDto.getScoreObtained());
-    //     }
-
-    //     stageEvaluation.setTotalStageScore(totalScore);
-    //     if (processStage.getMinimumPassingScore() != null && totalScore.compareTo(processStage.getMinimumPassingScore()) < 0) {
-    //         stageEvaluation.setIsEliminatedInStage(true);
-    //     } else {
-    //         stageEvaluation.setIsEliminatedInStage(false);
-    //     }
-
-    //     // Save the updated StageEvaluation entity
-    //     StageEvaluation updatedStageEvaluation = stageEvaluationRepository.save(stageEvaluation);
-
-    //     // Convert the updated entity to DTO before returning
-    //     return new StageEvaluationResponseDTO(updatedStageEvaluation);
-    // }
         List<CriterionScore> leafScores = new ArrayList<>(); // To hold scores for leaf criteria
 
         for (CriterionScoreInputDTO scoreDto : request.getScores()) {
@@ -197,12 +157,6 @@ public class CriterionScoreService {
         return criterionScoreRepository.findById(id);
     }
 
-    // @Transactional(readOnly = true)
-    // public List<CriterionScore> getScoresByStageEvaluation(Integer stageEvaluationId) {
-    //     StageEvaluation stageEvaluation = stageEvaluationRepository.findById(stageEvaluationId)
-    //             .orElseThrow(() -> new NoSuchElementException("Stage Evaluation not found with ID: " + stageEvaluationId));
-    //     return criterionScoreRepository.findByStageEvaluation(stageEvaluation);
-    // }
     @Transactional(readOnly = true)
     public List<CriterionScoreResponseDTO> getScoresByStageEvaluation(Integer stageEvaluationId) {
         StageEvaluation stageEvaluation = stageEvaluationRepository.findById(stageEvaluationId)
