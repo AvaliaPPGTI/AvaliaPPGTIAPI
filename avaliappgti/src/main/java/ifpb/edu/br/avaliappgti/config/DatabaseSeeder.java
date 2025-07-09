@@ -72,12 +72,12 @@ public class DatabaseSeeder {
 
             // Create Selection Process
             SelectionProcess process = new SelectionProcess();
-            process.setName("Processo Seletivo PPGTI 2025.1");
+            process.setName("Processo Seletivo PPGTI 2025.2");
             process.setProgram("PPGTI");
             process.setYear("2025");
-            process.setSemester("01");
-            process.setStartDate(LocalDate.of(2024, 8, 16));
-            process.setEndDate(LocalDate.of(2024, 11, 24));
+            process.setSemester("02");
+            process.setStartDate(LocalDate.of(2025, 7, 1));
+            process.setEndDate(LocalDate.of(2025, 12, 1));
 
             SelectionProcess savedProcess = selectionProcessRepository.save(process);
 

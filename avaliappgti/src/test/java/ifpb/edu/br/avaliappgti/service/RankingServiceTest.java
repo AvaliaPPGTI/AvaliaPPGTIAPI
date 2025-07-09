@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,12 @@ class RankingServiceTest {
         // Common setup for all tests
         selectionProcess = new SelectionProcess();
         selectionProcess.setId(1);
+        selectionProcess.setName("Processo de Seleção de Testes");
+        selectionProcess.setYear("2025");
+        selectionProcess.setStartDate(LocalDate.of(2025, 1, 1));
+        selectionProcess.setEndDate(LocalDate.of(2025, 12, 31)); 
+        selectionProcess.setProgram("PPGTI");
+        selectionProcess.setSemester("1º Semestre");
 
         researchTopic = new ResearchTopic();
         researchTopic.setId(10);
