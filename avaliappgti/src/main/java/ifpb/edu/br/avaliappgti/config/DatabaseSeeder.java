@@ -78,9 +78,6 @@ public class DatabaseSeeder {
             process.setSemester("01");
             process.setStartDate(LocalDate.of(2024, 8, 16));
             process.setEndDate(LocalDate.of(2024, 11, 24));
-            process.setWeightCurriculumStep(new BigDecimal("0.4"));
-            process.setWeightPreProjectStep(new BigDecimal("0.3"));
-            process.setWeightInterviewStep(new BigDecimal("0.3"));
 
             SelectionProcess savedProcess = selectionProcessRepository.save(process);
 
@@ -91,6 +88,7 @@ public class DatabaseSeeder {
             stage1.setSelectionProcess(savedProcess);
             stage1.setMinimumPassingScore(new BigDecimal("1.0"));
             stage1.setStageCharacter("Classificatório");
+            stage1.setStageWeight(new BigDecimal("0.4"));
             processStageRepository.save(stage1);
 
             ProcessStage stage2 = new ProcessStage();
@@ -99,6 +97,7 @@ public class DatabaseSeeder {
             stage2.setSelectionProcess(savedProcess);
             stage2.setMinimumPassingScore(new BigDecimal("60.0"));
             stage2.setStageCharacter("Classificatório e Eliminatório");
+            stage2.setStageWeight(new BigDecimal("0.3"));
             processStageRepository.save(stage2);
 
             ProcessStage stage3 = new ProcessStage();
@@ -107,6 +106,7 @@ public class DatabaseSeeder {
             stage3.setSelectionProcess(savedProcess);
             stage3.setMinimumPassingScore(new BigDecimal("70.0"));
             stage3.setStageCharacter("Classificatório e Eliminatório");
+            stage3.setStageWeight(new BigDecimal("0.3"));
             processStageRepository.save(stage3);
 
             // CreateEvaluationCriterion da entrevista (stage1)

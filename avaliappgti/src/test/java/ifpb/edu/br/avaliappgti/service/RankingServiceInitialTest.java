@@ -49,9 +49,6 @@ class RankingServiceInitialTest {
         // Arrange
         SelectionProcess process = new SelectionProcess();
         process.setId(1);
-        process.setWeightCurriculumStep(new BigDecimal("0.4"));
-        process.setWeightPreProjectStep(new BigDecimal("0.3"));
-        process.setWeightInterviewStep(new BigDecimal("0.3"));
 
         ResearchTopic topic = new ResearchTopic();
         topic.setId(1);
@@ -68,9 +65,9 @@ class RankingServiceInitialTest {
 
         List<Application> applications = Arrays.asList(app1, app2);
 
-        ProcessStage stage1 = new ProcessStage(); stage1.setStageOrder(1);
-        ProcessStage stage2 = new ProcessStage(); stage2.setStageOrder(2);
-        ProcessStage stage3 = new ProcessStage(); stage3.setStageOrder(3);
+        ProcessStage stage1 = new ProcessStage(); stage1.setStageOrder(1); stage1.setStageWeight(new BigDecimal("0.4"));
+        ProcessStage stage2 = new ProcessStage(); stage2.setStageOrder(2); stage2.setStageWeight(new BigDecimal("0.3"));
+        ProcessStage stage3 = new ProcessStage(); stage3.setStageOrder(3); stage3.setStageWeight(new BigDecimal("0.3"));
 
         StageEvaluation ev1_app1 = new StageEvaluation(app1, stage1, new BigDecimal("8.0"), false, null, null, null);
         StageEvaluation ev2_app1 = new StageEvaluation(app1, stage2, new BigDecimal("7.0"), false, null, null, null);

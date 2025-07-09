@@ -40,9 +40,6 @@ class RankingServiceTest {
         // Common setup for all tests
         selectionProcess = new SelectionProcess();
         selectionProcess.setId(1);
-        selectionProcess.setWeightCurriculumStep(new BigDecimal("0.4"));
-        selectionProcess.setWeightPreProjectStep(new BigDecimal("0.3"));
-        selectionProcess.setWeightInterviewStep(new BigDecimal("0.3"));
 
         researchTopic = new ResearchTopic();
         researchTopic.setId(10);
@@ -53,6 +50,10 @@ class RankingServiceTest {
     private StageEvaluation createStageEvaluation(int stageOrder, BigDecimal score, boolean isEliminated) {
         ProcessStage stage = new ProcessStage();
         stage.setStageOrder(stageOrder);
+        // Set stageWeight for each stageOrder
+        if (stageOrder == 1) stage.setStageWeight(new BigDecimal("0.4"));
+        if (stageOrder == 2) stage.setStageWeight(new BigDecimal("0.3"));
+        if (stageOrder == 3) stage.setStageWeight(new BigDecimal("0.3"));
 
         StageEvaluation evaluation = new StageEvaluation();
         evaluation.setProcessStage(stage);

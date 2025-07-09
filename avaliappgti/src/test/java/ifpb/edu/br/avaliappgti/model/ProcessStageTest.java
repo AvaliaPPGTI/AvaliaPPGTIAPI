@@ -19,7 +19,9 @@ class ProcessStageTest {
                 "Entrevista",
                 2,
                 "Eliminatory",
-                new BigDecimal("60.00")
+                new BigDecimal("60.00"),
+                new BigDecimal("0.3")
+
         );
 
         assertEquals("Entrevista", processStage.getStageName());

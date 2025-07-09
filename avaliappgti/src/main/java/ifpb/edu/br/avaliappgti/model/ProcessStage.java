@@ -33,13 +33,17 @@ public class ProcessStage {
     @Column(name = "minimum_passing_score", precision = 5, scale = 2)
     private BigDecimal minimumPassingScore; // Nullable if not eliminatory
 
+    @Column(name = "stage_weight", precision = 5, scale = 2)
+    private BigDecimal stageWeight;
+
     // Constructors
-    public ProcessStage(SelectionProcess selectionProcess, String stageName, Integer stageOrder, String stageCharacter, BigDecimal minimumPassingScore) {
+    public ProcessStage(SelectionProcess selectionProcess, String stageName, Integer stageOrder, String stageCharacter, BigDecimal minimumPassingScore, BigDecimal stageWeight) {
         this.selectionProcess = selectionProcess;
         this.stageName = stageName;
         this.stageOrder = stageOrder;
         this.stageCharacter = stageCharacter;
         this.minimumPassingScore = minimumPassingScore;
+        this.stageWeight = stageWeight;
     }
 
 

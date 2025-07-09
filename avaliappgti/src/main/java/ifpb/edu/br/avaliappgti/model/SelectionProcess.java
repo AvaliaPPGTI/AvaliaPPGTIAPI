@@ -3,7 +3,6 @@ package ifpb.edu.br.avaliappgti.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import lombok.Getter;
@@ -42,14 +41,5 @@ public class SelectionProcess {
 
     @Column(name = "end_date")
     private LocalDate endDate;
-
-    @Column(name = "weight_curriculum_step", precision = 5, scale = 2)
-    private BigDecimal weightCurriculumStep;
-
-    @Column(name = "weight_pre_project_step", precision = 5, scale = 2)
-    private BigDecimal weightPreProjectStep;
-
-    @Column(name = "weight_interview_step", precision = 5, scale = 2)
-    private BigDecimal weightInterviewStep;
 
 }

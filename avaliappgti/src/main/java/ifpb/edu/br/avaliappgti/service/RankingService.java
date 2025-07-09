@@ -90,10 +90,18 @@ public class RankingService {
         BigDecimal scorePP = preProject.getTotalStageScore();
         BigDecimal scorePE = interview.getTotalStageScore();
 
-        // Final score formula: PF = PC * 0.4 + PP * 0.3 + PE * 0.3
-        BigDecimal finalScore = scorePC.multiply(process.getWeightCurriculumStep())
-                .add(scorePP.multiply(process.getWeightPreProjectStep()))
-                .add(scorePE.multiply(process.getWeightInterviewStep()));
+        // Use stageWeight from each ProcessStage
+        BigDecimal weightPC = (curriculum != null && curriculum.getProcessStage().getStageWeight() != null)
+            ? curriculum.getProcessStage().getStageWeight() : BigDecimal.ZERO;
+        BigDecimal weightPP = (preProject != null && preProject.getProcessStage().getStageWeight() != null)
+            ? preProject.getProcessStage().getStageWeight() : BigDecimal.ZERO;
+        BigDecimal weightPE = (interview != null && interview.getProcessStage().getStageWeight() != null)
+            ? interview.getProcessStage().getStageWeight() : BigDecimal.ZERO;
+
+        // Final score formula: PF = PC * weightPC + PP * weightPP + PE * weightPE
+        BigDecimal finalScore = scorePC.multiply(weightPC)
+                .add(scorePP.multiply(weightPP))
+                .add(scorePE.multiply(weightPE));
 
         app.setFinalScore(finalScore);
         app.setApplicationStatus("Classificado");
