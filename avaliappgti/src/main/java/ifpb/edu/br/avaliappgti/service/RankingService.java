@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,73 @@ public class RankingService {
         this.researchTopicRepository = researchTopicRepository;
     }
 
+    // @Transactional
+    // public List<RankedApplicationDTO> generateRankingForProcess(Integer processId) {
+    //     // 1. Fetch Process and Applications
+    //     SelectionProcess process = selectionProcessRepository.findById(processId)
+    //             .orElseThrow(() -> new NoSuchElementException("Selection Process not found with ID: " + processId));
+    //     List<Application> applications = applicationRepository.findBySelectionProcess(process);
+
+    //     // 2. Process each application to calculate final score
+    //     for (Application app : applications) {
+    //         calculateFinalScoreForApplication(app, process);
+    //     }
+
+    //     // 3. Group applications by research topic for ranking
+    //     Map<ResearchTopic, List<Application>> applicationsByTopic = applications.stream()
+    //             .filter(app -> app.getResearchTopic() != null)
+    //             .collect(Collectors.groupingBy(Application::getResearchTopic));
+
+    //     // 4. Rank candidates within each topic
+    //     applicationsByTopic.forEach(this::rankApplicationsForTopic);
+
+    //     // 5. Save all updated applications
+    //     applicationRepository.saveAll(applications);
+
+    //     // 6. Return the results as DTOs, sorted by topic and rank
+    //     return applications.stream()
+    //             .sorted(Comparator.comparing((Application app) -> app.getResearchTopic().getName())
+    //                     .thenComparing(Application::getRankingByTopic, Comparator.nullsLast(Comparator.naturalOrder())))
+    //             .map(RankedApplicationDTO::new)
+    //             .collect(Collectors.toList());
+    // }
+
+    // private void calculateFinalScoreForApplication(Application app, SelectionProcess process) {
+    //     List<StageEvaluation> evaluations = stageEvaluationRepository.findByApplication(app);
+
+    //     StageEvaluation curriculum = evaluations.stream().filter(e -> e.getProcessStage().getStageOrder() == 1).findFirst().orElse(null);
+    //     StageEvaluation preProject = evaluations.stream().filter(e -> e.getProcessStage().getStageOrder() == 2).findFirst().orElse(null);
+    //     StageEvaluation interview = evaluations.stream().filter(e -> e.getProcessStage().getStageOrder() == 3).findFirst().orElse(null);
+
+    //     // Check elimination rules
+    //     if ((preProject == null || preProject.getIsEliminatedInStage()) || (interview == null || interview.getIsEliminatedInStage())) {
+    //         app.setApplicationStatus("Desclassificado");
+    //         app.setFinalScore(null);
+    //         app.setRankingByTopic(null);
+    //         app.setIsApproved(false);       
+    //         return;
+    //     }
+
+    //     BigDecimal scorePC = curriculum != null ? curriculum.getTotalStageScore() : BigDecimal.ZERO;
+    //     BigDecimal scorePP = preProject.getTotalStageScore();
+    //     BigDecimal scorePE = interview.getTotalStageScore();
+
+    //     // Use stageWeight from each ProcessStage
+    //     BigDecimal weightPC = (curriculum != null && curriculum.getProcessStage().getStageWeight() != null)
+    //         ? curriculum.getProcessStage().getStageWeight() : BigDecimal.ZERO;
+    //     BigDecimal weightPP = (preProject != null && preProject.getProcessStage().getStageWeight() != null)
+    //         ? preProject.getProcessStage().getStageWeight() : BigDecimal.ZERO;
+    //     BigDecimal weightPE = (interview != null && interview.getProcessStage().getStageWeight() != null)
+    //         ? interview.getProcessStage().getStageWeight() : BigDecimal.ZERO;
+
+    //     // Final score formula: PF = PC * weightPC + PP * weightPP + PE * weightPE
+    //     BigDecimal finalScore = scorePC.multiply(weightPC)
+    //             .add(scorePP.multiply(weightPP))
+    //             .add(scorePE.multiply(weightPE));
+
+    //     app.setFinalScore(finalScore);
+    //     app.setApplicationStatus("Classificado");
+    // }
     @Transactional
     public List<RankedApplicationDTO> generateRankingForProcess(Integer processId) {
         // 1. Fetch Process and Applications
@@ -46,65 +114,193 @@ public class RankingService {
                 .orElseThrow(() -> new NoSuchElementException("Selection Process not found with ID: " + processId));
         List<Application> applications = applicationRepository.findBySelectionProcess(process);
 
-        // 2. Process each application to calculate final score
+        // 2. Calculate final score for all qualified applications
         for (Application app : applications) {
-            calculateFinalScoreForApplication(app, process);
+            calculateFinalScoreForApplication(app);
         }
 
-        // 3. Group applications by research topic for ranking
+        // 3. Initial Ranking (Phase 1)
+        List<Application> preApprovedCandidates = new ArrayList<>();
         Map<ResearchTopic, List<Application>> applicationsByTopic = applications.stream()
-                .filter(app -> app.getResearchTopic() != null)
+                .filter(app -> "Ranked".equals(app.getApplicationStatus()) && app.getResearchTopic() != null)
                 .collect(Collectors.groupingBy(Application::getResearchTopic));
 
-        // 4. Rank candidates within each topic
-        applicationsByTopic.forEach(this::rankApplicationsForTopic);
+        applicationsByTopic.forEach((topic, apps) -> {
+            apps.sort(getRankingComparator());
+            for (int i = 0; i < apps.size(); i++) {
+                if (i < topic.getVacancies()) {
+                    preApprovedCandidates.add(apps.get(i));
+                }
+            }
+        });
+        
+        // 4. Quota Adjustment (Phase 2)
+        List<Application> finalApprovedCandidates = adjustForQuotas(preApprovedCandidates, applicationsByTopic);
 
-        // 5. Save all updated applications
+        // 5. Set final status for all applications
+        finalApprovedCandidates.forEach(app -> app.setIsApproved(true));
+        
+        // Set ranking numbers for the final approved list
+        Map<ResearchTopic, List<Application>> finalApprovedByTopic = finalApprovedCandidates.stream()
+            .collect(Collectors.groupingBy(Application::getResearchTopic));
+            
+        finalApprovedByTopic.forEach((topic, apps) -> {
+            apps.sort(getRankingComparator());
+            for(int i = 0; i < apps.size(); i++){
+                apps.get(i).setRankingByTopic(i + 1);
+            }
+        });
+        
+        // Ensure all other applications are marked as not approved
+        applications.stream()
+            .filter(app -> !finalApprovedCandidates.contains(app))
+            .forEach(app -> {
+                app.setIsApproved(false);
+                app.setRankingByTopic(null);
+            });
+
+
         applicationRepository.saveAll(applications);
-
-        // 6. Return the results as DTOs, sorted by topic and rank
+        
         return applications.stream()
                 .sorted(Comparator.comparing((Application app) -> app.getResearchTopic().getName())
-                        .thenComparing(Application::getRankingByTopic, Comparator.nullsLast(Comparator.naturalOrder())))
+                                  .thenComparing(Application::getRankingByTopic, Comparator.nullsLast(Comparator.naturalOrder())))
                 .map(RankedApplicationDTO::new)
                 .collect(Collectors.toList());
     }
 
-    private void calculateFinalScoreForApplication(Application app, SelectionProcess process) {
+    private void calculateFinalScoreForApplication(Application app) {
         List<StageEvaluation> evaluations = stageEvaluationRepository.findByApplication(app);
 
-        StageEvaluation curriculum = evaluations.stream().filter(e -> e.getProcessStage().getStageOrder() == 1).findFirst().orElse(null);
-        StageEvaluation preProject = evaluations.stream().filter(e -> e.getProcessStage().getStageOrder() == 2).findFirst().orElse(null);
-        StageEvaluation interview = evaluations.stream().filter(e -> e.getProcessStage().getStageOrder() == 3).findFirst().orElse(null);
+        StageEvaluation curriculum = getEvaluationByStageOrder(evaluations, 1);
+        StageEvaluation preProject = getEvaluationByStageOrder(evaluations, 2);
+        StageEvaluation interview = getEvaluationByStageOrder(evaluations, 3);
 
-        // Check elimination rules
         if ((preProject == null || preProject.getIsEliminatedInStage()) || (interview == null || interview.getIsEliminatedInStage())) {
-            app.setApplicationStatus("Desclassificado");
+            app.setApplicationStatus("Disqualified");
             app.setFinalScore(null);
-            app.setRankingByTopic(null);
-            app.setIsApproved(false);       
             return;
         }
 
         BigDecimal scorePC = curriculum != null ? curriculum.getTotalStageScore() : BigDecimal.ZERO;
         BigDecimal scorePP = preProject.getTotalStageScore();
         BigDecimal scorePE = interview.getTotalStageScore();
+        
+        BigDecimal weightPC = curriculum != null ? curriculum.getProcessStage().getStageWeight() : BigDecimal.ZERO;
+        BigDecimal weightPP = preProject.getProcessStage().getStageWeight();
+        BigDecimal weightPE = interview.getProcessStage().getStageWeight();
 
-        // Use stageWeight from each ProcessStage
-        BigDecimal weightPC = (curriculum != null && curriculum.getProcessStage().getStageWeight() != null)
-            ? curriculum.getProcessStage().getStageWeight() : BigDecimal.ZERO;
-        BigDecimal weightPP = (preProject != null && preProject.getProcessStage().getStageWeight() != null)
-            ? preProject.getProcessStage().getStageWeight() : BigDecimal.ZERO;
-        BigDecimal weightPE = (interview != null && interview.getProcessStage().getStageWeight() != null)
-            ? interview.getProcessStage().getStageWeight() : BigDecimal.ZERO;
-
-        // Final score formula: PF = PC * weightPC + PP * weightPP + PE * weightPE
         BigDecimal finalScore = scorePC.multiply(weightPC)
-                .add(scorePP.multiply(weightPP))
-                .add(scorePE.multiply(weightPE));
+                                .add(scorePP.multiply(weightPP))
+                                .add(scorePE.multiply(weightPE));
 
         app.setFinalScore(finalScore);
-        app.setApplicationStatus("Classificado");
+        app.setApplicationStatus("Ranked");
+    }
+    
+    private List<Application> adjustForQuotas(List<Application> preApprovedCandidates, Map<ResearchTopic, List<Application>> applicationsByTopic) {
+        
+        // These are the defined quota targets from your rules
+        final int afroIndigenousTarget = 4;
+        final int pwdTarget = 1;
+        final int serverTarget = 2;
+
+        List<Application> finalApproved = new ArrayList<>(preApprovedCandidates);
+
+        long currentAfroIndigenous = finalApproved.stream().filter(app -> isQuotaHolder(app, "Afrodescente") || isQuotaHolder(app, "Indígenas")).count();
+        long currentPwd = finalApproved.stream().filter(app -> isQuotaHolder(app, "Pessoa com deficiência")).count();
+        long currentServer = finalApproved.stream().filter(app -> isQuotaHolder(app, "Servidor do IFPB")).count();
+
+        // Loop until all quota targets are met or no more swaps are possible
+        while(currentAfroIndigenous < afroIndigenousTarget || currentPwd < pwdTarget || currentServer < serverTarget) {
+            
+            // Find the lowest-scoring, non-quota candidate from the currently approved list
+            Application candidateToReplace = finalApproved.stream()
+                .filter(app -> !isQuotaHolder(app))
+                .min(getRankingComparator())
+                .orElse(null);
+
+            // If no non-quota candidates are left to replace, stop the process
+            if (candidateToReplace == null) {
+                break;
+            }
+
+            ResearchTopic topicOfReplacement = candidateToReplace.getResearchTopic();
+            
+            // Determine which quota type needs filling and find the best candidate from the waiting list of that topic
+            Application bestQuotaCandidate = null;
+            if (currentAfroIndigenous < afroIndigenousTarget) {
+                bestQuotaCandidate = findBestWaitingListCandidate(applicationsByTopic.get(topicOfReplacement), finalApproved, "Afrodescente", "Indígenas");
+            }
+            if (currentPwd < pwdTarget && bestQuotaCandidate == null) {
+                bestQuotaCandidate = findBestWaitingListCandidate(applicationsByTopic.get(topicOfReplacement), finalApproved, "Pessoa com deficiência");
+            }
+            if (currentServer < serverTarget && bestQuotaCandidate == null) {
+                bestQuotaCandidate = findBestWaitingListCandidate(applicationsByTopic.get(topicOfReplacement), finalApproved, "Servidor do IFPB");
+            }
+            
+            // If a suitable quota candidate is found, perform the swap
+            if (bestQuotaCandidate != null) {
+                finalApproved.remove(candidateToReplace);
+                finalApproved.add(bestQuotaCandidate);
+
+                // Recalculate current quota numbers
+                currentAfroIndigenous = finalApproved.stream().filter(app -> isQuotaHolder(app, "Afrodescente") || isQuotaHolder(app, "Indígenas")).count();
+                currentPwd = finalApproved.stream().filter(app -> isQuotaHolder(app, "Pessoa com deficiência")).count();
+                currentServer = finalApproved.stream().filter(app -> isQuotaHolder(app, "Servidor do IFPB")).count();
+            } else {
+                // If no waiting list quota candidates can be found in that topic, we can't make a swap.
+                // A more complex implementation might look in other topics, but based on rule 3.13(b), the swap is within the same topic.
+                break;
+            }
+        }
+        
+        return finalApproved;
+    }
+
+    // Helper methods
+    private boolean isQuotaHolder(Application app, String... quotaNames) {
+        if (app.getCandidate() == null || app.getCandidate().getQuota() == null) return false;
+        for (String name : quotaNames) {
+            if (name.equals(app.getCandidate().getQuota().getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean isQuotaHolder(Application app) {
+        return app.getCandidate() != null && app.getCandidate().getQuota() != null;
+    }
+
+    private Application findBestWaitingListCandidate(List<Application> topicCandidates, List<Application> approved, String... quotaNames) {
+        return topicCandidates.stream()
+            .filter(app -> !approved.contains(app)) // Only look at waiting list
+            .filter(app -> isQuotaHolder(app, quotaNames))
+            .max(getRankingComparator())
+            .orElse(null);
+    }
+    
+    private Comparator<Application> getRankingComparator() {
+        return Comparator
+            .comparing(Application::getFinalScore, Comparator.nullsLast(Comparator.reverseOrder()))
+            .thenComparing(app -> getScoreForStage(app, 2), Comparator.nullsLast(Comparator.reverseOrder()))
+            .thenComparing(app -> getScoreForStage(app, 3), Comparator.nullsLast(Comparator.reverseOrder()));
+    }
+
+    private StageEvaluation getEvaluationByStageOrder(List<StageEvaluation> evaluations, int order) {
+        return evaluations.stream()
+                .filter(e -> e.getProcessStage().getStageOrder() == order)
+                .findFirst().orElse(null);
+    }
+
+    private BigDecimal getScoreForStage(Application app, int stageOrder) {
+        return stageEvaluationRepository.findByApplication(app)
+                .stream()
+                .filter(e -> e.getProcessStage().getStageOrder() == stageOrder)
+                .findFirst()
+                .map(StageEvaluation::getTotalStageScore)
+                .orElse(BigDecimal.ZERO);
     }
 
     private void rankApplicationsForTopic(ResearchTopic topic, List<Application> applications) {
@@ -138,22 +334,22 @@ public class RankingService {
             .forEach(app -> app.setIsApproved(false));
     }
     
-    // Helper method to get a specific stage evaluation from a list
-    private StageEvaluation getEvaluationByStageOrder(List<StageEvaluation> evaluations, int order) {
-        return evaluations.stream()
-                .filter(e -> e.getProcessStage().getStageOrder() == order)
-                .findFirst().orElse(null);
-    }
+    // // Helper method to get a specific stage evaluation from a list
+    // private StageEvaluation getEvaluationByStageOrder(List<StageEvaluation> evaluations, int order) {
+    //     return evaluations.stream()
+    //             .filter(e -> e.getProcessStage().getStageOrder() == order)
+    //             .findFirst().orElse(null);
+    // }
 
-    // Helper method to safely get a score for a specific stage for the comparator
-    private BigDecimal getScoreForStage(Application app, int stageOrder) {
-        return stageEvaluationRepository.findByApplication(app)
-                .stream()
-                .filter(e -> e.getProcessStage().getStageOrder() == stageOrder)
-                .findFirst()
-                .map(StageEvaluation::getTotalStageScore)
-                .orElse(BigDecimal.ZERO);
-    }
+    // // Helper method to safely get a score for a specific stage for the comparator
+    // private BigDecimal getScoreForStage(Application app, int stageOrder) {
+    //     return stageEvaluationRepository.findByApplication(app)
+    //             .stream()
+    //             .filter(e -> e.getProcessStage().getStageOrder() == stageOrder)
+    //             .findFirst()
+    //             .map(StageEvaluation::getTotalStageScore)
+    //             .orElse(BigDecimal.ZERO);
+    // }
 
     @Transactional
     public List<RankedApplicationDTO> getRankingForProcess(Integer processId) {
@@ -169,7 +365,8 @@ public class RankingService {
                 .map(RankedApplicationDTO::new)
                 .collect(Collectors.toList());
     }
-        /**
+    
+    /**
      * Retrieves a ranked list of evaluations for a specific stage of a selection process.
      */
     @Transactional(readOnly = true)
