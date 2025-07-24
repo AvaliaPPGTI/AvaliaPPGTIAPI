@@ -122,7 +122,7 @@ public class RankingService {
         // 3. Initial Ranking (Phase 1)
         List<Application> preApprovedCandidates = new ArrayList<>();
         Map<ResearchTopic, List<Application>> applicationsByTopic = applications.stream()
-                .filter(app -> "Ranked".equals(app.getApplicationStatus()) && app.getResearchTopic() != null)
+                .filter(app -> "Classificado".equals(app.getApplicationStatus()) && app.getResearchTopic() != null)
                 .collect(Collectors.groupingBy(Application::getResearchTopic));
 
         applicationsByTopic.forEach((topic, apps) -> {
@@ -177,7 +177,7 @@ public class RankingService {
         StageEvaluation interview = getEvaluationByStageOrder(evaluations, 3);
 
         if ((preProject == null || preProject.getIsEliminatedInStage()) || (interview == null || interview.getIsEliminatedInStage())) {
-            app.setApplicationStatus("Disqualified");
+            app.setApplicationStatus("Desclassificado");
             app.setFinalScore(null);
             return;
         }
@@ -195,7 +195,7 @@ public class RankingService {
                                 .add(scorePE.multiply(weightPE));
 
         app.setFinalScore(finalScore);
-        app.setApplicationStatus("Ranked");
+        app.setApplicationStatus("Classificado");
     }
     
     private List<Application> adjustForQuotas(List<Application> preApprovedCandidates, Map<ResearchTopic, List<Application>> applicationsByTopic) {
