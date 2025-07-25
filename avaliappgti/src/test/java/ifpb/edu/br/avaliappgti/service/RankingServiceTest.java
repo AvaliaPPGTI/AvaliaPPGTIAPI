@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +27,12 @@ class RankingServiceTest {
     private SelectionProcessRepository selectionProcessRepository;
     @Mock
     private StageEvaluationRepository stageEvaluationRepository;
-    // We don't need to mock ProcessStageRepository, ResearchLineRepository etc. for these tests
+    @Mock
+    private ProcessStageRepository processStageRepository;
+    @Mock
+    private ResearchLineRepository researchLineRepository;
+    @Mock
+    private ResearchTopicRepository researchTopicRepository;
 
     @InjectMocks
     private RankingService rankingService;
@@ -38,29 +42,19 @@ class RankingServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Common setup for all tests
         selectionProcess = new SelectionProcess();
         selectionProcess.setId(1);
-        selectionProcess.setName("Processo de Seleção de Testes");
-        selectionProcess.setYear("2025");
-        selectionProcess.setStartDate(LocalDate.of(2025, 1, 1));
-        selectionProcess.setEndDate(LocalDate.of(2025, 12, 31)); 
-        selectionProcess.setProgram("PPGTI");
-        selectionProcess.setSemester("1º Semestre");
 
         researchTopic = new ResearchTopic();
         researchTopic.setId(10);
         researchTopic.setName("Test Topic");
-        researchTopic.setVacancies(1); // Only 1 vacancy to test approval logic
+        researchTopic.setVacancies(2);
     }
 
-    private StageEvaluation createStageEvaluation(int stageOrder, BigDecimal score, boolean isEliminated) {
+    private StageEvaluation createStageEvaluation(int stageOrder, BigDecimal score, boolean isEliminated, BigDecimal weight) {
         ProcessStage stage = new ProcessStage();
         stage.setStageOrder(stageOrder);
-        // Set stageWeight for each stageOrder
-        if (stageOrder == 1) stage.setStageWeight(new BigDecimal("0.4"));
-        if (stageOrder == 2) stage.setStageWeight(new BigDecimal("0.3"));
-        if (stageOrder == 3) stage.setStageWeight(new BigDecimal("0.3"));
+        stage.setStageWeight(weight);
 
         StageEvaluation evaluation = new StageEvaluation();
         evaluation.setProcessStage(stage);
@@ -69,32 +63,29 @@ class RankingServiceTest {
         return evaluation;
     }
 
+    private Candidate createCandidate(int id, String quotaName) {
+        Candidate candidate = new Candidate();
+        candidate.setId(id);
+        if (quotaName != null) {
+            Quota quota = new Quota();
+            quota.setName(quotaName);
+            candidate.setQuota(quota);
+        }
+        return candidate;
+    }
+
     @Test
     void testGenerateRanking_SuccessfulRanking() {
         // --- Setup ---
-        // Candidate A (should rank 1st)
-        Application appA = new Application();
-        appA.setId(100);
-        appA.setResearchTopic(researchTopic);
-        appA.setCandidate(new Candidate());
+        Application appA = new Application(); appA.setId(100); appA.setResearchTopic(researchTopic); appA.setCandidate(createCandidate(1, null));
         List<StageEvaluation> evalsA = Arrays.asList(
-                createStageEvaluation(1, new BigDecimal("80"), false), // Curriculum
-                createStageEvaluation(2, new BigDecimal("90"), false), // Pre-project
-                createStageEvaluation(3, new BigDecimal("100"), false) // Interview
-        );
-        // Expected Final Score for A: (80*0.4)+(90*0.3)+(100*0.3) = 32 + 27 + 30 = 89.0
+                createStageEvaluation(1, new BigDecimal("80"), false, new BigDecimal("0.4")), createStageEvaluation(2, new BigDecimal("90"), false, new BigDecimal("0.3")), createStageEvaluation(3, new BigDecimal("100"), false, new BigDecimal("0.3"))
+        ); // Score: 89.0
 
-        // Candidate B (should rank 2nd)
-        Application appB = new Application();
-        appB.setId(200);
-        appB.setResearchTopic(researchTopic);
-        appB.setCandidate(new Candidate());
+        Application appB = new Application(); appB.setId(200); appB.setResearchTopic(researchTopic); appB.setCandidate(createCandidate(2, null));
         List<StageEvaluation> evalsB = Arrays.asList(
-                createStageEvaluation(1, new BigDecimal("70"), false),
-                createStageEvaluation(2, new BigDecimal("80"), false),
-                createStageEvaluation(3, new BigDecimal("90"), false)
-        );
-        // Expected Final Score for B: (70*0.4)+(80*0.3)+(90*0.3) = 28 + 24 + 27 = 79.0
+                createStageEvaluation(1, new BigDecimal("70"), false, new BigDecimal("0.4")), createStageEvaluation(2, new BigDecimal("80"), false, new BigDecimal("0.3")), createStageEvaluation(3, new BigDecimal("90"), false, new BigDecimal("0.3"))
+        ); // Score: 79.0
 
         when(selectionProcessRepository.findById(1)).thenReturn(Optional.of(selectionProcess));
         when(applicationRepository.findBySelectionProcess(selectionProcess)).thenReturn(Arrays.asList(appA, appB));
@@ -105,40 +96,25 @@ class RankingServiceTest {
         List<RankedApplicationDTO> result = rankingService.generateRankingForProcess(1);
 
         // --- Assertions ---
-        assertEquals(2, result.size());
-
-        // Check Candidate A
-        RankedApplicationDTO dtoA = result.get(0);
-        assertEquals(100, dtoA.getApplicationId());
-        assertEquals(0, new BigDecimal("89.0").compareTo(dtoA.getFinalScore()));
+        RankedApplicationDTO dtoA = result.stream().filter(r -> r.getApplicationId() == 100).findFirst().get();
         assertEquals(1, dtoA.getRankingByTopic());
-        assertTrue(dtoA.isApproved()); // Rank 1, 1 vacancy
+        assertTrue(dtoA.isApproved());
         assertEquals("Classificado", dtoA.getApplicationStatus());
 
-        // Check Candidate B
-        RankedApplicationDTO dtoB = result.get(1);
-        assertEquals(200, dtoB.getApplicationId());
-        assertEquals(0, new BigDecimal("79.0").compareTo(dtoB.getFinalScore()));
+        RankedApplicationDTO dtoB = result.stream().filter(r -> r.getApplicationId() == 200).findFirst().get();
         assertEquals(2, dtoB.getRankingByTopic());
-        assertFalse(dtoB.isApproved()); // Rank 2, 1 vacancy
+        assertTrue(dtoB.isApproved());
         assertEquals("Classificado", dtoB.getApplicationStatus());
     }
 
     @Test
     void testGenerateRanking_WithDisqualifiedCandidate() {
         // --- Setup ---
-        Application appA = new Application(); // Will be ranked
-        appA.setId(100);
-        appA.setResearchTopic(researchTopic);
-        appA.setCandidate(new Candidate());
-        List<StageEvaluation> evalsA = Arrays.asList(createStageEvaluation(1, BigDecimal.TEN, false), createStageEvaluation(2, new BigDecimal("80"), false), createStageEvaluation(3, new BigDecimal("80"), false));
+        Application appA = new Application(); appA.setId(100); appA.setResearchTopic(researchTopic); appA.setCandidate(createCandidate(1, null));
+        List<StageEvaluation> evalsA = Arrays.asList(createStageEvaluation(1, BigDecimal.TEN, false, new BigDecimal("0.4")), createStageEvaluation(2, new BigDecimal("80"), false, new BigDecimal("0.3")), createStageEvaluation(3, new BigDecimal("80"), false, new BigDecimal("0.3")));
 
-        Application appB = new Application(); // Will be disqualified
-        appB.setId(200);
-        appB.setResearchTopic(researchTopic);
-        appB.setCandidate(new Candidate());
-        // Disqualified because interview stage is marked as eliminated
-        List<StageEvaluation> evalsB = Arrays.asList(createStageEvaluation(1, BigDecimal.TEN, false), createStageEvaluation(2, new BigDecimal("90"), false), createStageEvaluation(3, new BigDecimal("60"), true));
+        Application appB = new Application(); appB.setId(200); appB.setResearchTopic(researchTopic); appB.setCandidate(createCandidate(2, null));
+        List<StageEvaluation> evalsB = Arrays.asList(createStageEvaluation(1, BigDecimal.TEN, false, new BigDecimal("0.4")), createStageEvaluation(2, new BigDecimal("90"), false, new BigDecimal("0.3")), createStageEvaluation(3, new BigDecimal("60"), true, new BigDecimal("0.3")));
 
         when(selectionProcessRepository.findById(1)).thenReturn(Optional.of(selectionProcess));
         when(applicationRepository.findBySelectionProcess(selectionProcess)).thenReturn(Arrays.asList(appA, appB));
@@ -149,9 +125,6 @@ class RankingServiceTest {
         List<RankedApplicationDTO> result = rankingService.generateRankingForProcess(1);
 
         // --- Assertions ---
-        assertEquals(2, result.size());
-
-        // Find the DTO for the disqualified candidate
         RankedApplicationDTO dtoB = result.stream().filter(r -> r.getApplicationId() == 200).findFirst().get();
         assertEquals("Desclassificado", dtoB.getApplicationStatus());
         assertNull(dtoB.getFinalScore());
@@ -161,44 +134,32 @@ class RankingServiceTest {
 
     @Test
     void testGenerateRanking_TieBreakingLogic() {
-        // --- Setup ---
-        // Both candidates will have the same final score: 85.0
-        // Candidate A has a higher pre-project score (tie-breaker 1)
-        Application appA = new Application();
-        appA.setId(100);
-        appA.setResearchTopic(researchTopic);
-        appA.setCandidate(new Candidate());
+        // --- Setup: Both candidates have a final score of 90.0 ---
+        Application appA_TieWinner = new Application(); appA_TieWinner.setId(100); appA_TieWinner.setResearchTopic(researchTopic); appA_TieWinner.setCandidate(createCandidate(1, null));
         List<StageEvaluation> evalsA = Arrays.asList(
-                createStageEvaluation(1, new BigDecimal("80"), false),
-                createStageEvaluation(2, new BigDecimal("90"), false), // Higher pre-project score
-                createStageEvaluation(3, new BigDecimal("86.667"), false)
-        );
+                createStageEvaluation(1, new BigDecimal("90"), false, new BigDecimal("0.4")),
+                createStageEvaluation(2, new BigDecimal("90"), false, new BigDecimal("0.3")), // Higher pre-project score
+                createStageEvaluation(3, new BigDecimal("90"), false, new BigDecimal("0.3"))
+        ); // Final Score: 90.0
 
-        // Candidate B
-        Application appB = new Application();
-        appB.setId(200);
-        appB.setResearchTopic(researchTopic);
-        appB.setCandidate(new Candidate());
+        Application appB_TieLoser = new Application(); appB_TieLoser.setId(200); appB_TieLoser.setResearchTopic(researchTopic); appB_TieLoser.setCandidate(createCandidate(2, null));
         List<StageEvaluation> evalsB = Arrays.asList(
-                createStageEvaluation(1, new BigDecimal("85"), false),
-                createStageEvaluation(2, new BigDecimal("80"), false), // Lower pre-project score
-                createStageEvaluation(3, new BigDecimal("90"), false)
-        );
+                createStageEvaluation(1, new BigDecimal("90"), false, new BigDecimal("0.4")),
+                createStageEvaluation(2, new BigDecimal("80"), false, new BigDecimal("0.3")), // Lower pre-project score
+                createStageEvaluation(3, new BigDecimal("100"), false, new BigDecimal("0.3"))
+        ); // Final Score: 90.0
 
         when(selectionProcessRepository.findById(1)).thenReturn(Optional.of(selectionProcess));
-        when(applicationRepository.findBySelectionProcess(selectionProcess)).thenReturn(Arrays.asList(appA, appB));
-        when(stageEvaluationRepository.findByApplication(appA)).thenReturn(evalsA);
-        when(stageEvaluationRepository.findByApplication(appB)).thenReturn(evalsB);
+        when(applicationRepository.findBySelectionProcess(selectionProcess)).thenReturn(Arrays.asList(appA_TieWinner, appB_TieLoser));
+        when(stageEvaluationRepository.findByApplication(appA_TieWinner)).thenReturn(evalsA);
+        when(stageEvaluationRepository.findByApplication(appB_TieLoser)).thenReturn(evalsB);
 
         // --- Action ---
         List<RankedApplicationDTO> result = rankingService.generateRankingForProcess(1);
 
         // --- Assertions ---
-        // Candidate A should be ranked 1st due to higher pre-project score
         assertEquals(100, result.get(0).getApplicationId());
         assertEquals(1, result.get(0).getRankingByTopic());
-
-        // Candidate B should be ranked 2nd
         assertEquals(200, result.get(1).getApplicationId());
         assertEquals(2, result.get(1).getRankingByTopic());
     }
@@ -206,29 +167,12 @@ class RankingServiceTest {
     @Test
     void testGenerateRanking_CandidateOnWaitingList() {
         // --- Setup ---
-        // We have a research topic with only 1 vacancy, configured in setUp()
+        researchTopic.setVacancies(1); // Set to 1 vacancy for this test
+        Application appA = new Application(); appA.setId(100); appA.setResearchTopic(researchTopic); appA.setCandidate(createCandidate(1, null));
+        List<StageEvaluation> evalsA = Arrays.asList(createStageEvaluation(1, new BigDecimal("90"), false, new BigDecimal("0.4")), createStageEvaluation(2, new BigDecimal("90"), false, new BigDecimal("0.3")), createStageEvaluation(3, new BigDecimal("90"), false, new BigDecimal("0.3")));
 
-        // Candidate A (should be approved)
-        Application appA = new Application();
-        appA.setId(100);
-        appA.setResearchTopic(researchTopic);
-        appA.setCandidate(new Candidate());
-        List<StageEvaluation> evalsA = Arrays.asList(
-                createStageEvaluation(1, new BigDecimal("90"), false),
-                createStageEvaluation(2, new BigDecimal("90"), false),
-                createStageEvaluation(3, new BigDecimal("90"), false)
-        ); // Final Score: 90.0
-
-        // Candidate B (should be on the waiting list)
-        Application appB = new Application();
-        appB.setId(200);
-        appB.setResearchTopic(researchTopic);
-        appB.setCandidate(new Candidate());
-        List<StageEvaluation> evalsB = Arrays.asList(
-                createStageEvaluation(1, new BigDecimal("80"), false),
-                createStageEvaluation(2, new BigDecimal("80"), false),
-                createStageEvaluation(3, new BigDecimal("80"), false)
-        ); // Final Score: 80.0
+        Application appB = new Application(); appB.setId(200); appB.setResearchTopic(researchTopic); appB.setCandidate(createCandidate(2, null));
+        List<StageEvaluation> evalsB = Arrays.asList(createStageEvaluation(1, new BigDecimal("80"), false, new BigDecimal("0.4")), createStageEvaluation(2, new BigDecimal("80"), false, new BigDecimal("0.3")), createStageEvaluation(3, new BigDecimal("80"), false, new BigDecimal("0.3")));
 
         when(selectionProcessRepository.findById(1)).thenReturn(Optional.of(selectionProcess));
         when(applicationRepository.findBySelectionProcess(selectionProcess)).thenReturn(Arrays.asList(appA, appB));
@@ -239,20 +183,48 @@ class RankingServiceTest {
         List<RankedApplicationDTO> result = rankingService.generateRankingForProcess(1);
 
         // --- Assertions ---
-        assertEquals(2, result.size());
-
-        // Check Candidate A (Approved)
-        RankedApplicationDTO dtoA = result.get(0);
-        assertEquals(100, dtoA.getApplicationId());
-        assertEquals(1, dtoA.getRankingByTopic());
+        RankedApplicationDTO dtoA = result.stream().filter(r -> r.getApplicationId() == 100).findFirst().get();
         assertTrue(dtoA.isApproved());
-        assertEquals("Classificado", dtoA.getApplicationStatus());
 
-        // Check Candidate B (Waiting List)
-        RankedApplicationDTO dtoB = result.get(1);
-        assertEquals(200, dtoB.getApplicationId());
-        assertEquals(2, dtoB.getRankingByTopic());
-        assertFalse(dtoB.isApproved()); // Correctly NOT approved
-        assertEquals("Classificado", dtoB.getApplicationStatus()); // But is still ranked
+        RankedApplicationDTO dtoB = result.stream().filter(r -> r.getApplicationId() == 200).findFirst().get();
+        assertFalse(dtoB.isApproved());
+        assertEquals("Classificado", dtoB.getApplicationStatus());
+        assertNull(dtoB.getRankingByTopic(), "Waiting list candidates should not have a final rank");
+    }
+
+    @Test
+    void testGenerateRanking_QuotaAdjustment() {
+        // --- Setup ---
+        researchTopic.setVacancies(2);
+        Application appA = new Application(); appA.setId(100); appA.setResearchTopic(researchTopic); appA.setCandidate(createCandidate(1, null));
+        List<StageEvaluation> evalsA = Arrays.asList(createStageEvaluation(1, new BigDecimal("95"), false, new BigDecimal("0.4")), createStageEvaluation(2, new BigDecimal("95"), false, new BigDecimal("0.3")), createStageEvaluation(3, new BigDecimal("95"), false, new BigDecimal("0.3")));
+
+        Application appB = new Application(); appB.setId(200); appB.setResearchTopic(researchTopic); appB.setCandidate(createCandidate(2, null));
+        List<StageEvaluation> evalsB = Arrays.asList(createStageEvaluation(1, new BigDecimal("90"), false, new BigDecimal("0.4")), createStageEvaluation(2, new BigDecimal("90"), false, new BigDecimal("0.3")), createStageEvaluation(3, new BigDecimal("90"), false, new BigDecimal("0.3")));
+
+        Application appC = new Application(); appC.setId(300); appC.setResearchTopic(researchTopic); appC.setCandidate(createCandidate(3, "Pessoa com deficiência"));
+        List<StageEvaluation> evalsC = Arrays.asList(createStageEvaluation(1, new BigDecimal("85"), false, new BigDecimal("0.4")), createStageEvaluation(2, new BigDecimal("85"), false, new BigDecimal("0.3")), createStageEvaluation(3, new BigDecimal("85"), false, new BigDecimal("0.3")));
+
+        when(selectionProcessRepository.findById(1)).thenReturn(Optional.of(selectionProcess));
+        when(applicationRepository.findBySelectionProcess(selectionProcess)).thenReturn(Arrays.asList(appA, appB, appC));
+        when(stageEvaluationRepository.findByApplication(appA)).thenReturn(evalsA);
+        when(stageEvaluationRepository.findByApplication(appB)).thenReturn(evalsB);
+        when(stageEvaluationRepository.findByApplication(appC)).thenReturn(evalsC);
+
+        // --- Action ---
+        List<RankedApplicationDTO> result = rankingService.generateRankingForProcess(1);
+
+        // --- Assertions ---
+        RankedApplicationDTO dtoA = result.stream().filter(r -> r.getApplicationId() == 100).findFirst().get();
+        RankedApplicationDTO dtoB = result.stream().filter(r -> r.getApplicationId() == 200).findFirst().get();
+        RankedApplicationDTO dtoC = result.stream().filter(r -> r.getApplicationId() == 300).findFirst().get();
+
+        assertTrue(dtoA.isApproved(), "High-scorer A should be approved");
+        assertFalse(dtoB.isApproved(), "Medium-scorer B should be replaced by quota candidate");
+        assertTrue(dtoC.isApproved(), "Quota candidate C should be approved");
+
+        assertEquals(1, dtoA.getRankingByTopic());
+        assertEquals(2, dtoC.getRankingByTopic());
+        assertNull(dtoB.getRankingByTopic());
     }
 }

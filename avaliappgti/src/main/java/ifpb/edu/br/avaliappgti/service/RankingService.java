@@ -55,7 +55,7 @@ public class RankingService {
         // 3. Initial Ranking (Phase 1)
         List<Application> preApprovedCandidates = new ArrayList<>();
         Map<ResearchTopic, List<Application>> applicationsByTopic = applications.stream()
-                .filter(app -> "Ranked".equals(app.getApplicationStatus()) && app.getResearchTopic() != null)
+                .filter(app -> "Classificado".equals(app.getApplicationStatus()) && app.getResearchTopic() != null)
                 .collect(Collectors.groupingBy(Application::getResearchTopic));
 
         applicationsByTopic.forEach((topic, apps) -> {
@@ -107,7 +107,7 @@ public class RankingService {
         StageEvaluation interview = getEvaluationByStageOrder(evaluations, 3);
 
         if ((preProject == null || preProject.getIsEliminatedInStage()) || (interview == null || interview.getIsEliminatedInStage())) {
-            app.setApplicationStatus("Disqualified");
+            app.setApplicationStatus("Desclassificado");
             app.setFinalScore(null);
             return;
         }
@@ -125,7 +125,7 @@ public class RankingService {
                 .add(scorePE.multiply(weightPE));
 
         app.setFinalScore(finalScore);
-        app.setApplicationStatus("Ranked");
+        app.setApplicationStatus("Classificado");
     }
 
     private List<Application> adjustForQuotas(List<Application> preApprovedCandidates, Map<ResearchTopic, List<Application>> applicationsByTopic) {
@@ -135,7 +135,6 @@ public class RankingService {
 
         List<Application> finalApproved = new ArrayList<>(preApprovedCandidates);
 
-        // Loop until all quota targets are met or no more swaps are possible
         while (true) {
             long currentAfroIndigenous = finalApproved.stream().filter(app -> isQuotaHolder(app, "Afrodescente", "Indígenas")).count();
             long currentPwd = finalApproved.stream().filter(app -> isQuotaHolder(app, "Pessoa com deficiência")).count();
@@ -145,9 +144,10 @@ public class RankingService {
                 break; // All targets met
             }
 
+            // CORRECTED LOGIC: Find the non-quota candidate with the lowest score to replace
             Application candidateToReplace = finalApproved.stream()
                     .filter(app -> !isQuotaHolder(app))
-                    .min(getRankingComparator())
+                    .min(getRankingComparator().reversed()) // Use a reversed comparator to find the minimum score
                     .orElse(null);
 
             if (candidateToReplace == null) {
