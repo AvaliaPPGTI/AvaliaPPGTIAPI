@@ -6,6 +6,7 @@ import ifpb.edu.br.avaliappgti.model.Candidate;
 import ifpb.edu.br.avaliappgti.service.ApplicationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class ApplicationController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_COMMITTEE')")
     public ResponseEntity<List<Application>> getAllApplications() {
         List<Application> applications = applicationService.getAllApplications();
         return ResponseEntity.ok(applications);
@@ -42,6 +44,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/details-by-process/{processId}")
+    @PreAuthorize("hasRole('ROLE_COMMITTEE')")
     public ResponseEntity<List<CandidateApplicationDetailDTO>> getCandidateApplicationDetailsByProcess(
             @PathVariable Integer processId) {
         try {
