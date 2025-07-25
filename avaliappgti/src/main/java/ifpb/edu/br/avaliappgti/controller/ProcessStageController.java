@@ -4,6 +4,7 @@ import ifpb.edu.br.avaliappgti.model.ProcessStage;
 import ifpb.edu.br.avaliappgti.service.ProcessStageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/process-stages")
+@PreAuthorize("hasRole('ROLE_COMMITTEE')")
 public class ProcessStageController {
 
     private final ProcessStageService processStageService;

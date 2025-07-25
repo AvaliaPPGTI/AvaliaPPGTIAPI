@@ -4,12 +4,14 @@ import ifpb.edu.br.avaliappgti.model.ResearchTopic;
 import ifpb.edu.br.avaliappgti.service.ResearchTopicService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/research-topics")
+@PreAuthorize("hasRole('ROLE_COMMITTEE')")
 public class ResearchTopicController {
 
     private final ResearchTopicService researchTopicService;

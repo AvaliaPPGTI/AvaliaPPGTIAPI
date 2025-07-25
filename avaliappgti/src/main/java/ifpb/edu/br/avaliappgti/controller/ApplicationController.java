@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/applications")
+@PreAuthorize("hasRole('ROLE_COMMITTEE')")
 public class ApplicationController {
 
     private final ApplicationService applicationService;
@@ -24,7 +25,6 @@ public class ApplicationController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_COMMITTEE')")
     public ResponseEntity<List<Application>> getAllApplications() {
         List<Application> applications = applicationService.getAllApplications();
         return ResponseEntity.ok(applications);
@@ -44,7 +44,6 @@ public class ApplicationController {
     }
 
     @GetMapping("/details-by-process/{processId}")
-    @PreAuthorize("hasRole('ROLE_COMMITTEE')")
     public ResponseEntity<List<CandidateApplicationDetailDTO>> getCandidateApplicationDetailsByProcess(
             @PathVariable Integer processId) {
         try {

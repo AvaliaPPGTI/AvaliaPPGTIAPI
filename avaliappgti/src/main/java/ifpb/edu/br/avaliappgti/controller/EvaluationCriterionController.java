@@ -10,6 +10,7 @@ import ifpb.edu.br.avaliappgti.dto.CreateTopLevelCriterionRequestDTO;
 import ifpb.edu.br.avaliappgti.dto.EvaluationCriterionResponseDTO;
 import ifpb.edu.br.avaliappgti.dto.UpdateEvaluationCriterionRequestDTO;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/evaluation-criteria")
+@PreAuthorize("hasRole('ROLE_COMMITTEE')")
 public class EvaluationCriterionController {
 
     private final EvaluationCriterionService evaluationCriterionService;

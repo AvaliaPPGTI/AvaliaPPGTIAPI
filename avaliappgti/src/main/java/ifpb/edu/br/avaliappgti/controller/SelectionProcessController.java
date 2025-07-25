@@ -7,6 +7,7 @@ import ifpb.edu.br.avaliappgti.service.SelectionProcessService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -16,6 +17,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/selection-processes")
+@PreAuthorize("hasRole('ROLE_COMMITTEE')")
 public class SelectionProcessController {
     private final SelectionProcessService selectionProcessService;
 
