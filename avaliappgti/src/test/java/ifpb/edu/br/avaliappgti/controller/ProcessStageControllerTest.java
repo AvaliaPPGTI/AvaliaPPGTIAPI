@@ -1,6 +1,7 @@
 package ifpb.edu.br.avaliappgti.controller;
 
 import ifpb.edu.br.avaliappgti.model.ProcessStage;
+import ifpb.edu.br.avaliappgti.service.CustomUserDetailsService;
 import ifpb.edu.br.avaliappgti.service.ProcessStageService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.*;
@@ -18,8 +20,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 
 @WebMvcTest(ProcessStageController.class)
+@WithMockUser(roles = "COMMITTEE")
 class ProcessStageControllerTest {
 
     @Autowired
@@ -27,6 +31,9 @@ class ProcessStageControllerTest {
 
     @MockBean
     private ProcessStageService processStageService;
+
+    @MockBean
+    private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -95,6 +102,7 @@ class ProcessStageControllerTest {
         when(processStageService.saveProcessStage(any(ProcessStage.class))).thenReturn(saved);
 
         mockMvc.perform(post("/api/process-stages")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(stage)))
                 .andExpect(status().isCreated())
@@ -115,6 +123,7 @@ class ProcessStageControllerTest {
         when(processStageService.saveProcessStage(any(ProcessStage.class))).thenReturn(stage);
 
         mockMvc.perform(put("/api/process-stages/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(stage)))
                 .andExpect(status().isOk());
@@ -128,6 +137,7 @@ class ProcessStageControllerTest {
         when(processStageService.getProcessStageById(1)).thenReturn(Optional.empty());
 
         mockMvc.perform(put("/api/process-stages/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(stage)))
                 .andExpect(status().isNotFound());
@@ -141,7 +151,8 @@ class ProcessStageControllerTest {
         when(processStageService.getProcessStageById(1)).thenReturn(Optional.of(stage));
         Mockito.doNothing().when(processStageService).deleteProcessStage(1);
 
-        mockMvc.perform(delete("/api/process-stages/1"))
+        mockMvc.perform(delete("/api/process-stages/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isNoContent());
     }
 
@@ -149,7 +160,8 @@ class ProcessStageControllerTest {
     void testDeleteProcessStage_whenNotFound() throws Exception {
         when(processStageService.getProcessStageById(1)).thenReturn(Optional.empty());
 
-        mockMvc.perform(delete("/api/process-stages/1"))
+        mockMvc.perform(delete("/api/process-stages/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isNotFound());
     }
 }

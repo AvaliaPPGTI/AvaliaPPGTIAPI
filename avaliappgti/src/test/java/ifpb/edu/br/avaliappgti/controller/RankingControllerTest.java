@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -28,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(RankingController.class)
+@WithMockUser(roles = "COMMITTEE")
 class RankingControllerTest {
 
     @Autowired
@@ -57,7 +60,8 @@ class RankingControllerTest {
         dto.setApplicationId(2);
         when(rankingService.generateRankingForProcess(1)).thenReturn(List.of(dto));
 
-        mockMvc.perform(post("/api/ranking/generate/process/1"))
+        mockMvc.perform(post("/api/ranking/generate/process/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].applicationId").value(2));
     }

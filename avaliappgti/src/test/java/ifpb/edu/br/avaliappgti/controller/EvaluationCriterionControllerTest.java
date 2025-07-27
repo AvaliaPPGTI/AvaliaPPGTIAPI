@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -31,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(EvaluationCriterionController.class)
+@WithMockUser(roles = "COMMITTEE")
 class EvaluationCriterionControllerTest {
 
     @Autowired
@@ -65,6 +68,7 @@ class EvaluationCriterionControllerTest {
                 .thenReturn(criterion);
 
         mockMvc.perform(post("/api/evaluation-criteria/top-level")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated())
@@ -82,6 +86,7 @@ class EvaluationCriterionControllerTest {
                 .thenReturn(criterion);
 
         mockMvc.perform(post("/api/evaluation-criteria/1/sub-criterion")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated())
@@ -116,6 +121,7 @@ class EvaluationCriterionControllerTest {
                 .thenReturn(criterion);
 
         mockMvc.perform(put("/api/evaluation-criteria/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
@@ -131,6 +137,7 @@ class EvaluationCriterionControllerTest {
                 .thenReturn(criterion);
 
         mockMvc.perform(patch("/api/evaluation-criteria/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
@@ -142,6 +149,14 @@ class EvaluationCriterionControllerTest {
         when(evaluationCriterionService.getEvaluationCriterionById(1)).thenThrow(new NoSuchElementException());
 
         mockMvc.perform(get("/api/evaluation-criteria/1"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getEvaluationCriteriaTreeByProcessStage_shouldReturnNotFound() throws Exception {
+        when(evaluationCriterionService.getTopLevelCriteriaByProcessStage(1)).thenThrow(new NoSuchElementException());
+
+        mockMvc.perform(get("/api/evaluation-criteria/by-process-stage/1"))
                 .andExpect(status().isNotFound());
     }
 }
