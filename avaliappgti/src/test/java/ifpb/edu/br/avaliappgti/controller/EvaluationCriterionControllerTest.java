@@ -1,6 +1,7 @@
 package ifpb.edu.br.avaliappgti.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ifpb.edu.br.avaliappgti.config.JwtAuthFilter;
 import ifpb.edu.br.avaliappgti.dto.CreateSubCriterionRequestDTO;
 import ifpb.edu.br.avaliappgti.dto.CreateTopLevelCriterionRequestDTO;
 import ifpb.edu.br.avaliappgti.dto.EvaluationCriterionResponseDTO;
@@ -9,6 +10,8 @@ import ifpb.edu.br.avaliappgti.model.*;
 import ifpb.edu.br.avaliappgti.repository.*;
 
 import ifpb.edu.br.avaliappgti.service.EvaluationCriterionService;
+import ifpb.edu.br.avaliappgti.utils.JwtUtil;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +44,12 @@ class EvaluationCriterionControllerTest {
 
     @MockBean
     private EvaluationCriterionService evaluationCriterionService;
+
+    @MockBean
+    private JwtUtil jwtUtil;
+
+    @MockBean
+    private JwtAuthFilter jwtAuthFilter;
 
     @Autowired
     private ObjectMapper objectMapper;

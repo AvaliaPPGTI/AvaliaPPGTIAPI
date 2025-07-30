@@ -1,59 +1,69 @@
 package ifpb.edu.br.avaliappgti.service;
 
 import ifpb.edu.br.avaliappgti.dto.LoginRequest;
+import ifpb.edu.br.avaliappgti.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class AuthServiceTest {
 
-    // @Mock
-    // private AuthenticationManager authenticationManager;
+    @Mock
+    private AuthenticationManager authenticationManager;
+    @Mock
+    private CustomUserDetailsService userDetailsService;
+    @Mock
+    private JwtUtil jwtUtil;
 
-    // @InjectMocks
-    // private AuthService authService;
+    @InjectMocks
+    private AuthService authService;
 
-    // @BeforeEach
-    // void setUp() {
-    //     MockitoAnnotations.openMocks(this);
-    //     authService = new AuthService(authenticationManager);
-    //     SecurityContextHolder.clearContext();
-    // }
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        authService = new AuthService(authenticationManager, userDetailsService, jwtUtil);
+    }
 
-    // @Test
-    // void testLogin_successfulAuthentication() {
-    //     LoginRequest loginRequest = new LoginRequest();
-    //     loginRequest.setIfRegistration("IFPB-1234567");
-    //     loginRequest.setPassword("password");
+    @Test
+    void testLogin_success() {
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setIfRegistration("IFPB-1234567");
+        loginRequest.setPassword("password");
 
-    //     Authentication mockAuth = mock(Authentication.class);
-    //     when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(mockAuth);
-    //     when(mockAuth.isAuthenticated()).thenReturn(true);
+        UserDetails userDetails = mock(UserDetails.class);
+        when(userDetailsService.loadUserByUsername("IFPB-1234567")).thenReturn(userDetails);
+        when(jwtUtil.generateToken(userDetails)).thenReturn("jwt-token-123");
 
-    //     boolean result = authService.login(loginRequest);
+        // authenticationManager.authenticate should not throw
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(mock(UsernamePasswordAuthenticationToken.class));
 
-    //     assertTrue(result);
-    //     assertEquals(mockAuth, SecurityContextHolder.getContext().getAuthentication());
-    // }
+        String token = authService.login(loginRequest);
 
-    // @Test
-    // void testLogin_failedAuthentication() {
-    //     LoginRequest loginRequest = new LoginRequest();
-    //     loginRequest.setIfRegistration("IFPB-1234567");
-    //     loginRequest.setPassword("wrong");
+        assertEquals("jwt-token-123", token);
+        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(userDetailsService).loadUserByUsername("IFPB-1234567");
+        verify(jwtUtil).generateToken(userDetails);
+    }
 
-    //     when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-    //             .thenThrow(new BadCredentialsException("Bad credentials"));
+    @Test
+    void testLogin_badCredentials() {
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setIfRegistration("IFPB-1234567");
+        loginRequest.setPassword("wrong");
 
-    //     assertThrows(BadCredentialsException.class, () -> authService.login(loginRequest));
-    //     assertNull(SecurityContextHolder.getContext().getAuthentication());
-    // }
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenThrow(new BadCredentialsException("Bad credentials"));
+
+        assertThrows(BadCredentialsException.class, () -> authService.login(loginRequest));
+        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verifyNoInteractions(userDetailsService, jwtUtil);
+    }
 }

@@ -15,41 +15,41 @@ import static org.mockito.Mockito.*;
 
 class CustomUserDetailsServiceTest {
 
-    // @Mock
-    // private CommitteeMemberRepository committeeMemberRepository;
+    @Mock
+    private CommitteeMemberRepository committeeMemberRepository;
 
-    // @InjectMocks
-    // private CustomUserDetailsService customUserDetailsService;
+    @InjectMocks
+    private CustomUserDetailsService customUserDetailsService;
 
-    // @BeforeEach
-    // void setUp() {
-    //     MockitoAnnotations.openMocks(this);
-    //     customUserDetailsService = new CustomUserDetailsService(committeeMemberRepository);
-    // }
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        customUserDetailsService = new CustomUserDetailsService(committeeMemberRepository);
+    }
 
-    // @Test
-    // void testLoadUserByUsername_userFound() {
-    //     CommitteeMember member = new CommitteeMember();
-    //     member.setIfRegistration("IFPB-1234567");
-    //     member.setPassword("plainpassword");
+    @Test
+    void testLoadUserByUsername_userFound() {
+        CommitteeMember member = new CommitteeMember();
+        member.setIfRegistration("IFPB-1234567");
+        member.setPassword("plainpassword");
 
-    //     when(committeeMemberRepository.findByIfRegistration("IFPB-1234567"))
-    //             .thenReturn(Optional.of(member));
+        when(committeeMemberRepository.findByIfRegistration("IFPB-1234567"))
+                .thenReturn(Optional.of(member));
 
-    //     UserDetails userDetails = customUserDetailsService.loadUserByUsername("IFPB-1234567");
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername("IFPB-1234567");
 
-    //     assertEquals("IFPB-1234567", userDetails.getUsername());
-    //     assertEquals("plainpassword", userDetails.getPassword());
-    //     assertTrue(userDetails.getAuthorities().stream()
-    //             .anyMatch(a -> a.getAuthority().equals("ROLE_COMMITTEE")));
-    // }
+        assertEquals("IFPB-1234567", userDetails.getUsername());
+        assertEquals("plainpassword", userDetails.getPassword());
+        assertTrue(userDetails.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_COMMITTEE")));
+    }
 
-    // @Test
-    // void testLoadUserByUsername_userNotFound() {
-    //     when(committeeMemberRepository.findByIfRegistration("NOT_FOUND"))
-    //             .thenReturn(Optional.empty());
+    @Test
+    void testLoadUserByUsername_userNotFound() {
+        when(committeeMemberRepository.findByIfRegistration("NOT_FOUND"))
+                .thenReturn(Optional.empty());
 
-    //     assertThrows(UsernameNotFoundException.class, () ->
-    //             customUserDetailsService.loadUserByUsername("NOT_FOUND"));
-    // }
+        assertThrows(UsernameNotFoundException.class, () ->
+                customUserDetailsService.loadUserByUsername("NOT_FOUND"));
+    }
 }
