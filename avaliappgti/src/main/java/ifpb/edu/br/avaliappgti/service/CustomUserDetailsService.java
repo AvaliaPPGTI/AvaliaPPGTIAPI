@@ -25,11 +25,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         CommitteeMember member = committeeMemberRepository.findByIfRegistration(ifRegistration)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with registration: " + ifRegistration));
 
-        // WARNING: Storing plain text passwords. This is a major security risk.
-        // You should migrate to hashed passwords.
         return new User(
                 member.getIfRegistration(),
-                member.getPassword(), // Spring will compare this with the provided password
+                member.getPassword(),
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_COMMITTEE"))
         );
     }

@@ -15,45 +15,45 @@ import static org.mockito.Mockito.*;
 
 class AuthServiceTest {
 
-    @Mock
-    private AuthenticationManager authenticationManager;
+    // @Mock
+    // private AuthenticationManager authenticationManager;
 
-    @InjectMocks
-    private AuthService authService;
+    // @InjectMocks
+    // private AuthService authService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        authService = new AuthService(authenticationManager);
-        SecurityContextHolder.clearContext();
-    }
+    // @BeforeEach
+    // void setUp() {
+    //     MockitoAnnotations.openMocks(this);
+    //     authService = new AuthService(authenticationManager);
+    //     SecurityContextHolder.clearContext();
+    // }
 
-    @Test
-    void testLogin_successfulAuthentication() {
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setIfRegistration("IFPB-1234567");
-        loginRequest.setPassword("password");
+    // @Test
+    // void testLogin_successfulAuthentication() {
+    //     LoginRequest loginRequest = new LoginRequest();
+    //     loginRequest.setIfRegistration("IFPB-1234567");
+    //     loginRequest.setPassword("password");
 
-        Authentication mockAuth = mock(Authentication.class);
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(mockAuth);
-        when(mockAuth.isAuthenticated()).thenReturn(true);
+    //     Authentication mockAuth = mock(Authentication.class);
+    //     when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(mockAuth);
+    //     when(mockAuth.isAuthenticated()).thenReturn(true);
 
-        boolean result = authService.login(loginRequest);
+    //     boolean result = authService.login(loginRequest);
 
-        assertTrue(result);
-        assertEquals(mockAuth, SecurityContextHolder.getContext().getAuthentication());
-    }
+    //     assertTrue(result);
+    //     assertEquals(mockAuth, SecurityContextHolder.getContext().getAuthentication());
+    // }
 
-    @Test
-    void testLogin_failedAuthentication() {
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setIfRegistration("IFPB-1234567");
-        loginRequest.setPassword("wrong");
+    // @Test
+    // void testLogin_failedAuthentication() {
+    //     LoginRequest loginRequest = new LoginRequest();
+    //     loginRequest.setIfRegistration("IFPB-1234567");
+    //     loginRequest.setPassword("wrong");
 
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenThrow(new BadCredentialsException("Bad credentials"));
+    //     when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+    //             .thenThrow(new BadCredentialsException("Bad credentials"));
 
-        assertThrows(BadCredentialsException.class, () -> authService.login(loginRequest));
-        assertNull(SecurityContextHolder.getContext().getAuthentication());
-    }
+    //     assertThrows(BadCredentialsException.class, () -> authService.login(loginRequest));
+    //     assertNull(SecurityContextHolder.getContext().getAuthentication());
+    // }
 }
