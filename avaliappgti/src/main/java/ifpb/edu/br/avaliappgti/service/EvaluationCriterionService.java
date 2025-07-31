@@ -150,7 +150,7 @@ public class EvaluationCriterionService {
      * WARNING: Deleting a parent criterion will cascade and delete its children due to CascadeType.ALL + orphanRemoval.
      * Also, ensure that foreign key constraints in the database (e.g., from criterion_scores) are handled.
      * JPA will throw an exception if there are associated CriterionScores unless ON DELETE CASCADE is set
-     * at the DB level, or you explicitly delete them here.
+     * at the DB level, or explicitly delete them here.
      */
     @Transactional
     public void deleteEvaluationCriterion(Integer id) {

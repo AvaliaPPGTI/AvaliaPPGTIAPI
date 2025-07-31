@@ -80,11 +80,11 @@ public class StageEvaluationService {
 
 
         // Initialize finalScore and isEliminatedInStage to default values
-        stageEvaluation.setTotalStageScore(null); // Or BigDecimal.ZERO, depending on your default
+        stageEvaluation.setTotalStageScore(null); // Or BigDecimal.ZERO
         stageEvaluation.setIsEliminatedInStage(false); // Default to not eliminated
 
         // Optional: Check for existing evaluation for the same application and stage
-        // If you only allow one evaluation per app/stage, add a unique constraint in DB
+        // If only allow one evaluation per app/stage, add a unique constraint in DB
         // and/or a check here: stageEvaluationRepository.findByApplicationAndProcessStage(...)
         StageEvaluation savedStageEvaluation = stageEvaluationRepository.save(stageEvaluation);
 
@@ -124,7 +124,7 @@ public class StageEvaluationService {
             stageEvaluation.setIsEliminatedInStage(false);
         }
 
-        // Optional: If you included isEliminatedInStage in the DTO and want client to control it
+        // Optional: If included isEliminatedInStage in the DTO and want client to control it
         // if (updateDTO.getIsEliminatedInStage() != null) {
         //     stageEvaluation.setIsEliminatedInStage(updateDTO.getIsEliminatedInStage());
         // }

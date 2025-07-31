@@ -105,7 +105,7 @@ public class CriterionScoreService {
     }
 
     // This is the core aggregation logic
-    // You might store aggregated scores for parent criteria in a new table
+    // Store aggregated scores for parent criteria in a new table
     // or calculate them on the fly. For simplicity, let's calculate total for StageEvaluation here.
     private BigDecimal calculateAggregatedScoresAndTotal(StageEvaluation stageEvaluation, List<CriterionScore> leafScores) {
         BigDecimal totalScoreForStage = BigDecimal.ZERO;
@@ -147,7 +147,7 @@ public class CriterionScoreService {
                 }
             }
             // Normalize aggregated score to the parent's maximum score if needed (e.g., if child scores are not proportional to parent's max)
-            // This logic depends on how you want to sum/average scores.
+
             return aggregatedScore;
         }
     }

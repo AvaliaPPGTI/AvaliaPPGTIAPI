@@ -19,11 +19,11 @@ public interface EvaluationCriterionRepository extends JpaRepository<EvaluationC
     Optional<EvaluationCriterion> findByCriterionDescriptionAndProcessStage(String description, ProcessStage processStage);
 
     // Find top-level criteria for a specific process stage (where parent is null)
-    // Add EntityGraph to eagerly fetch children if you need the full tree structure
+    // Add EntityGraph to eagerly fetch children if need the full tree structure
     @EntityGraph(attributePaths = {"children"}) // Fetch direct children
     List<EvaluationCriterion> findByProcessStageAndParentIsNull(ProcessStage processStage);
 
-    // EntityGraph for findById if you need the full tree
+    // EntityGraph for findById if need the full tree
     @Override
     @EntityGraph(attributePaths = {"parent", "children"}) // Eagerly load parent and children for context
     Optional<EvaluationCriterion> findById(Integer id);

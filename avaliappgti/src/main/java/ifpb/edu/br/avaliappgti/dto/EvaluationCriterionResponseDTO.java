@@ -16,7 +16,7 @@ public class EvaluationCriterionResponseDTO {
     private List<EvaluationCriterionResponseDTO> children;
     private boolean isLeaf; // Helper for client
 
-    // Optional: Add score obtained if you want to include it in the tree
+
     private BigDecimal scoreObtained; // Score for this leaf criterion (if it's a leaf)
     private BigDecimal aggregatedScore; // Aggregated score for this parent criterion (if it's a parent)
 

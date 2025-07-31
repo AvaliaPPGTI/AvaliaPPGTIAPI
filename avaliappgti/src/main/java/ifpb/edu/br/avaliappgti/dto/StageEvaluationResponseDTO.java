@@ -52,7 +52,7 @@ public class StageEvaluationResponseDTO {
     }
 
     // --- Getters and Setters for all fields ---
-    // (Lombok @Getter/@Setter can generate these if you enable it for DTOs)
+    // Lombok @Getter/@Setter can generate
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
     public Integer getApplicationId() { return applicationId; }

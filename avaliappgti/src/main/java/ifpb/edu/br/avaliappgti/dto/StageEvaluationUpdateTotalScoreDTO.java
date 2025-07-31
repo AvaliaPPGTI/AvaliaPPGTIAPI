@@ -12,7 +12,7 @@ public class StageEvaluationUpdateTotalScoreDTO {
     // @DecimalMax(value = "100.0", message = "Total score cannot exceed 100")
     private BigDecimal totalStageScore;
 
-    // Optional: If you want to explicitly set elimination status from the client
+
     // @NotNull(message = "Elimination status is required")
     // private Boolean isEliminatedInStage;
 
