@@ -4,6 +4,7 @@ import ifpb.edu.br.avaliappgti.model.StageEvaluation;
 import ifpb.edu.br.avaliappgti.service.StageEvaluationService;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationCreateDTO; 
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationResponseDTO;
+import ifpb.edu.br.avaliappgti.dto.StageEvaluationUpdateObservationsDTO;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationUpdateTotalScoreDTO;
 import jakarta.validation.Valid; 
 import org.springframework.http.HttpStatus;
@@ -65,6 +66,22 @@ public class StageEvaluationController {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } catch (Exception e) {
             System.err.println("Error updating total stage score: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PatchMapping("/{id}/observations")
+    public ResponseEntity<StageEvaluationResponseDTO> updateObservations(
+            @PathVariable Integer id,
+            @RequestBody StageEvaluationUpdateObservationsDTO updateDTO) {
+        try {
+            StageEvaluationResponseDTO updatedEvaluation = stageEvaluationService.updateObservations(id, updateDTO);
+            return ResponseEntity.ok(updatedEvaluation);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            System.err.println("Error updating observations: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

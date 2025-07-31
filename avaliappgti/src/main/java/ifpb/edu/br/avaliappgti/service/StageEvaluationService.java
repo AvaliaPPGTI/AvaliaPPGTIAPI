@@ -18,6 +18,7 @@ import ifpb.edu.br.avaliappgti.repository.CriterionScoreRepository;
 import ifpb.edu.br.avaliappgti.repository.EvaluationCriterionRepository;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationCreateDTO;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationResponseDTO;
+import ifpb.edu.br.avaliappgti.dto.StageEvaluationUpdateObservationsDTO;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationUpdateTotalScoreDTO;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -131,6 +132,18 @@ public class StageEvaluationService {
         StageEvaluation updatedEntity = stageEvaluationRepository.save(stageEvaluation);
 
         // Convert and return the DTO to avoid serialization issues
+        return new StageEvaluationResponseDTO(updatedEntity);
+    }
+
+    @Transactional
+    public StageEvaluationResponseDTO updateObservations(Integer stageEvaluationId, StageEvaluationUpdateObservationsDTO updateDTO) {
+        StageEvaluation stageEvaluation = stageEvaluationRepository.findById(stageEvaluationId)
+                .orElseThrow(() -> new NoSuchElementException("Stage Evaluation not found with ID: " + stageEvaluationId));
+
+        stageEvaluation.setObservations(updateDTO.getObservations());
+
+        StageEvaluation updatedEntity = stageEvaluationRepository.save(stageEvaluation);
+
         return new StageEvaluationResponseDTO(updatedEntity);
     }
 
