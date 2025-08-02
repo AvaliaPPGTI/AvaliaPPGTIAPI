@@ -1,125 +1,190 @@
 package ifpb.edu.br.avaliappgti.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationCreateDTO;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationResponseDTO;
+import ifpb.edu.br.avaliappgti.dto.StageEvaluationUpdateObservationsDTO;
 import ifpb.edu.br.avaliappgti.dto.StageEvaluationUpdateTotalScoreDTO;
+import ifpb.edu.br.avaliappgti.service.AuthService;
+import ifpb.edu.br.avaliappgti.service.CustomUserDetailsService;
 import ifpb.edu.br.avaliappgti.service.StageEvaluationService;
-import org.junit.jupiter.api.BeforeEach;
+import ifpb.edu.br.avaliappgti.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
-import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@WebMvcTest(StageEvaluationController.class)
+@WithMockUser(authorities = "ROLE_COMMITTEE")
 class StageEvaluationControllerTest {
 
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @MockBean
     private StageEvaluationService stageEvaluationService;
-    private StageEvaluationController controller;
 
-    @BeforeEach
-    void setUp() {
-        stageEvaluationService = mock(StageEvaluationService.class);
-        controller = new StageEvaluationController(stageEvaluationService);
-    }
+    @MockBean
+    private JwtUtil jwtUtil;
+    @MockBean
+    private CustomUserDetailsService customUserDetailsService;
+    @MockBean
+    private AuthService authService;
 
     @Test
-    void testCreateStageEvaluation_success() {
+    void testCreateStageEvaluation_success() throws Exception {
         StageEvaluationCreateDTO dto = new StageEvaluationCreateDTO();
+        // Set required fields to avoid validation errors
+        dto.setApplicationId(1);
+        dto.setProcessStageId(2);
+        dto.setCommitteeMemberId(3);
+        
         StageEvaluationResponseDTO responseDTO = new StageEvaluationResponseDTO();
-        when(stageEvaluationService.createStageEvaluation(dto)).thenReturn(responseDTO);
+        responseDTO.setId(1);
 
-        ResponseEntity<StageEvaluationResponseDTO> response = controller.createStageEvaluation(dto);
+        when(stageEvaluationService.createStageEvaluation(any())).thenReturn(responseDTO);
 
-        assertEquals(201, response.getStatusCodeValue());
-        assertEquals(responseDTO, response.getBody());
+        mockMvc.perform(post("/api/stage-evaluations")
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
-    void testGetStageEvaluationById_found() {
+    void testGetStageEvaluationById_found() throws Exception {
         Integer id = 1;
         StageEvaluationResponseDTO dto = new StageEvaluationResponseDTO();
+        dto.setId(id);
+        
         when(stageEvaluationService.getStageEvaluationById(id)).thenReturn(Optional.of(dto));
 
-        ResponseEntity<StageEvaluationResponseDTO> response = controller.getStageEvaluationById(id);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(dto, response.getBody());
+        mockMvc.perform(get("/api/stage-evaluations/{id}", id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id));
     }
 
     @Test
-    void testGetStageEvaluationById_notFound() {
+    void testGetStageEvaluationById_notFound() throws Exception {
         when(stageEvaluationService.getStageEvaluationById(1)).thenReturn(Optional.empty());
 
-        ResponseEntity<StageEvaluationResponseDTO> response = controller.getStageEvaluationById(1);
-
-        assertEquals(404, response.getStatusCodeValue());
+        mockMvc.perform(get("/api/stage-evaluations/{id}", 1))
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    void testUpdateStageTotalScore_success() {
+    void testUpdateStageTotalScore_success() throws Exception {
         StageEvaluationUpdateTotalScoreDTO dto = new StageEvaluationUpdateTotalScoreDTO();
+        dto.setTotalStageScore(new BigDecimal("95.5"));
         StageEvaluationResponseDTO responseDTO = new StageEvaluationResponseDTO();
-        when(stageEvaluationService.updateStageTotalScore(1, dto)).thenReturn(responseDTO);
+        responseDTO.setId(1);
+        
+        when(stageEvaluationService.updateStageTotalScore(eq(1), any(StageEvaluationUpdateTotalScoreDTO.class))).thenReturn(responseDTO);
 
-        ResponseEntity<StageEvaluationResponseDTO> response = controller.updateStageTotalScore(1, dto);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(responseDTO, response.getBody());
+        mockMvc.perform(patch("/api/stage-evaluations/{id}/total-score", 1)
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
-    void testFindStageEvaluationByDetails_found() {
+    void testFindStageEvaluationByDetails_found() throws Exception {
         StageEvaluationResponseDTO dto = new StageEvaluationResponseDTO();
-        when(stageEvaluationService.findStageEvaluationByDetails(1, 2, 3)).thenReturn(Optional.of(dto));
+        dto.setId(1);
+        
+        when(stageEvaluationService.findStageEvaluationByDetails(3, 2, 1)).thenReturn(Optional.of(dto));
 
-        ResponseEntity<?> response = controller.findStageEvaluationByDetails(1, 2, 3);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(dto, response.getBody());
+        mockMvc.perform(get("/api/stage-evaluations/find")
+                .param("applicationId", "3")
+                .param("processStageId", "2") 
+                .param("committeeMemberId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
-    void testFindStageEvaluationByDetails_notFound() {
-        when(stageEvaluationService.findStageEvaluationByDetails(1, 2, 3)).thenReturn(Optional.empty());
+    void testFindStageEvaluationByDetails_notFound() throws Exception {
+        when(stageEvaluationService.findStageEvaluationByDetails(3, 2, 1)).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = controller.findStageEvaluationByDetails(1, 2, 3);
-
-        assertEquals(404, response.getStatusCodeValue());
-        assertTrue(response.getBody() instanceof Map);
-        assertEquals("No object found.", ((Map<?, ?>) response.getBody()).get("message"));
+        mockMvc.perform(get("/api/stage-evaluations/find")
+                .param("applicationId", "3")
+                .param("processStageId", "2")
+                .param("committeeMemberId", "1"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("No object found."));
     }
 
     @Test
-    void testCalculateTotalScore_success() {
+    void testCalculateTotalScore_success() throws Exception {
         StageEvaluationResponseDTO dto = new StageEvaluationResponseDTO();
+        dto.setId(1);
+        
         when(stageEvaluationService.calculateAndSaveTotalScore(1)).thenReturn(dto);
 
-        ResponseEntity<StageEvaluationResponseDTO> response = controller.calculateTotalScore(1);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(dto, response.getBody());
+        mockMvc.perform(post("/api/stage-evaluations/{id}/calculate-total-score", 1)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
-    void testCalculateTotalScore_notFound() {
+    void testCalculateTotalScore_notFound() throws Exception {
         when(stageEvaluationService.calculateAndSaveTotalScore(1)).thenThrow(new java.util.NoSuchElementException());
 
-        ResponseEntity<StageEvaluationResponseDTO> response = controller.calculateTotalScore(1);
-
-        assertEquals(404, response.getStatusCodeValue());
+        mockMvc.perform(post("/api/stage-evaluations/{id}/calculate-total-score", 1)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    void testCalculateTotalScore_conflict() {
+    void testCalculateTotalScore_conflict() throws Exception {
         when(stageEvaluationService.calculateAndSaveTotalScore(1)).thenThrow(new IllegalStateException());
 
-        ResponseEntity<StageEvaluationResponseDTO> response = controller.calculateTotalScore(1);
+        mockMvc.perform(post("/api/stage-evaluations/{id}/calculate-total-score", 1)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().isConflict());
+    }
 
-        assertEquals(409, response.getStatusCodeValue());
+    @Test
+    void whenUpdateObservations_thenReturns200() throws Exception {
+        Integer stageEvaluationId = 1;
+        String newObservations = "This is a test observation.";
+
+        StageEvaluationUpdateObservationsDTO updateDTO = new StageEvaluationUpdateObservationsDTO();
+        updateDTO.setObservations(newObservations);
+
+        StageEvaluationResponseDTO responseDTO = new StageEvaluationResponseDTO();
+        responseDTO.setId(stageEvaluationId);
+        responseDTO.setObservations(newObservations);
+
+        when(stageEvaluationService.updateObservations(eq(stageEvaluationId), any(StageEvaluationUpdateObservationsDTO.class)))
+                .thenReturn(responseDTO);
+
+        mockMvc.perform(patch("/api/stage-evaluations/{id}/observations", stageEvaluationId)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(stageEvaluationId))
+                .andExpect(jsonPath("$.observations").value(newObservations));
     }
 }

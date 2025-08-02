@@ -1,20 +1,21 @@
 package ifpb.edu.br.avaliappgti.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ifpb.edu.br.avaliappgti.config.SecurityConfig;
 import ifpb.edu.br.avaliappgti.dto.StageWeightDTO;
 import ifpb.edu.br.avaliappgti.dto.UpdateStageWeightDTO;
 import ifpb.edu.br.avaliappgti.model.ProcessStage;
 import ifpb.edu.br.avaliappgti.model.SelectionProcess;
+import ifpb.edu.br.avaliappgti.service.AuthService;
+import ifpb.edu.br.avaliappgti.service.CustomUserDetailsService;
 import ifpb.edu.br.avaliappgti.service.SelectionProcessService;
+import ifpb.edu.br.avaliappgti.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -27,8 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(SelectionProcessController.class)
-@Import(SecurityConfig.class)
-@WithMockUser(roles = "COMMITTEE")
+@WithMockUser(authorities = "ROLE_COMMITTEE")
 class SelectionProcessControllerTest {
 
     @Autowired
@@ -36,6 +36,14 @@ class SelectionProcessControllerTest {
 
     @MockBean
     private SelectionProcessService selectionProcessService;
+
+    // Add missing security-related MockBeans
+    @MockBean
+    private JwtUtil jwtUtil;
+    @MockBean
+    private CustomUserDetailsService customUserDetailsService;
+    @MockBean
+    private AuthService authService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -101,6 +109,7 @@ class SelectionProcessControllerTest {
         List<UpdateStageWeightDTO> updateList = Arrays.asList(dto1, dto2);
 
         mockMvc.perform(put("/api/selection-processes/current/weights")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateList)))
                 .andExpect(status().isOk())
@@ -118,6 +127,7 @@ class SelectionProcessControllerTest {
                 .when(selectionProcessService).updateCurrentProcessStageWeights(any());
 
         mockMvc.perform(put("/api/selection-processes/current/weights")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateList)))
                 .andExpect(status().isNotFound())
@@ -135,6 +145,7 @@ class SelectionProcessControllerTest {
                 .when(selectionProcessService).updateCurrentProcessStageWeights(any());
 
         mockMvc.perform(put("/api/selection-processes/current/weights")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateList)))
                 .andExpect(status().isBadRequest())
@@ -152,6 +163,7 @@ class SelectionProcessControllerTest {
                 .when(selectionProcessService).updateCurrentProcessStageWeights(any());
 
         mockMvc.perform(put("/api/selection-processes/current/weights")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateList)))
                 .andExpect(status().isInternalServerError())
