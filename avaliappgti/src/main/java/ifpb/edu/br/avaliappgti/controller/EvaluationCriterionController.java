@@ -162,4 +162,19 @@ public class EvaluationCriterionController {
         }
     }
 
+    /**
+     * Deletes an evaluation criterion by its ID.
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEvaluationCriterion(@PathVariable Integer id) {
+        try {
+            evaluationCriterionService.deleteEvaluationCriterion(id);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

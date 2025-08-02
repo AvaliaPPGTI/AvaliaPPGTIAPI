@@ -9,6 +9,8 @@ import ifpb.edu.br.avaliappgti.dto.UpdateEvaluationCriterionRequestDTO;
 import ifpb.edu.br.avaliappgti.model.*;
 import ifpb.edu.br.avaliappgti.repository.*;
 
+import ifpb.edu.br.avaliappgti.service.AuthService;
+import ifpb.edu.br.avaliappgti.service.CustomUserDetailsService;
 import ifpb.edu.br.avaliappgti.service.EvaluationCriterionService;
 import ifpb.edu.br.avaliappgti.utils.JwtUtil;
 
@@ -36,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(EvaluationCriterionController.class)
-@WithMockUser(roles = "COMMITTEE")
+@WithMockUser(authorities = "ROLE_COMMITTEE")
 class EvaluationCriterionControllerTest {
 
     @Autowired
@@ -47,9 +49,10 @@ class EvaluationCriterionControllerTest {
 
     @MockBean
     private JwtUtil jwtUtil;
-
     @MockBean
-    private JwtAuthFilter jwtAuthFilter;
+    private CustomUserDetailsService customUserDetailsService;
+    @MockBean
+    private AuthService authService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -167,5 +170,14 @@ class EvaluationCriterionControllerTest {
 
         mockMvc.perform(get("/api/evaluation-criteria/by-process-stage/1"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deleteEvaluationCriterion_shouldReturnNoContent() throws Exception {
+        doNothing().when(evaluationCriterionService).deleteEvaluationCriterion(1);
+
+        mockMvc.perform(delete("/api/evaluation-criteria/1")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().isNoContent());
     }
 }

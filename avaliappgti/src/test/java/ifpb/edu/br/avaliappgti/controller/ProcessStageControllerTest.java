@@ -1,8 +1,10 @@
 package ifpb.edu.br.avaliappgti.controller;
 
 import ifpb.edu.br.avaliappgti.model.ProcessStage;
+import ifpb.edu.br.avaliappgti.service.AuthService;
 import ifpb.edu.br.avaliappgti.service.CustomUserDetailsService;
 import ifpb.edu.br.avaliappgti.service.ProcessStageService;
+import ifpb.edu.br.avaliappgti.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 
 @WebMvcTest(ProcessStageController.class)
-@WithMockUser(roles = "COMMITTEE")
+@WithMockUser(authorities = "ROLE_COMMITTEE")
 class ProcessStageControllerTest {
 
     @Autowired
@@ -33,7 +35,13 @@ class ProcessStageControllerTest {
     private ProcessStageService processStageService;
 
     @MockBean
+    private JwtUtil jwtUtil;
+
+    @MockBean
     private CustomUserDetailsService customUserDetailsService;
+
+    @MockBean
+    private AuthService authService;
 
     @Autowired
     private ObjectMapper objectMapper;

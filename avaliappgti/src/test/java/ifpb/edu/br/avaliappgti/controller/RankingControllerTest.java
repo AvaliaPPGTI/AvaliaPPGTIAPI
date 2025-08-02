@@ -5,6 +5,7 @@ import ifpb.edu.br.avaliappgti.dto.*;
 import ifpb.edu.br.avaliappgti.model.*;
 import ifpb.edu.br.avaliappgti.repository.*;
 import ifpb.edu.br.avaliappgti.service.*;
+import ifpb.edu.br.avaliappgti.utils.JwtUtil;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(RankingController.class)
-@WithMockUser(roles = "COMMITTEE")
+@WithMockUser(authorities = "ROLE_COMMITTEE")
 class RankingControllerTest {
 
     @Autowired
@@ -38,6 +39,14 @@ class RankingControllerTest {
 
     @MockBean
     private RankingService rankingService;
+
+    // Add missing security-related MockBeans
+    @MockBean
+    private JwtUtil jwtUtil;
+    @MockBean
+    private CustomUserDetailsService customUserDetailsService;
+    @MockBean
+    private AuthService authService;
 
     // ObjectMapper for JSON conversion
     @Autowired
